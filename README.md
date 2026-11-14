@@ -7,6 +7,8 @@ web page where **nothing is uploaded**: Python ([Pyodide](https://pyodide.org))
 and Tesseract (compiled to WebAssembly) run in the browser, so a figure of an
 old paper can be digitised without sending it to a server or an AI model.
 
+**Open it: <https://comparativechrono.github.io/digitiser-workbench/>**
+
 It has the tabs of our other workbenches, with a help pane of walkthroughs on
 the left:
 

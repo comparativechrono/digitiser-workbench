@@ -138,8 +138,9 @@ def versions_table():
     e = html.escape
     rows = ['<table>', '<tr><th>What</th><th>Version</th><th>Where it comes from</th></tr>']
     where = src.get('from', '')
-    link = (f'<a href="{e(where, quote=True)}" target="_blank" rel="noopener">{e(where.split(" (")[0].split("://", 1)[-1])}</a>'
-            f'{e(where[len(where.split(" (")[0]):])}' if where.startswith('http') else e(where))
+    url = where.split(' (')[0]  # a URL, then perhaps a note in brackets
+    link = (f'<a href="{e(url, quote=True)}" target="_blank" rel="noopener">{e(url.split("://", 1)[-1])}</a>'
+            f'{e(where[len(url):])}' if where.startswith('http') else e(where))
     rows.append(f'<tr><td>trace-digitiser</td><td>{e(src["version"])}</td><td>{link}</td></tr>')
     rows.append(f'<tr><td>dwb (the workbench\'s own glue)</td><td>{e(b["packages"].get("dwb", ""))}</td><td>python/dwb in this '
                 'site\'s repository</td></tr>')
