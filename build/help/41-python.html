@@ -1,0 +1,17 @@
+<!-- id: h-python | title: trace-digitiser in Python | group: Notebook and terminal | summary: The functions, their results, and the options they share | keys: python api functions digitise digitise_points describe_figure pixels_to_values result warnings options reference -->
+<h1><!--ICON:python-->trace-digitiser in Python</h1>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+result = td.digitise_points("/data/examples/hearn-whitmore-2026/figure-3c.png", output_dir="/home/user/results/py")
+print(result.warnings)
+result.data.head()</code></pre>
+<div class="help-xscroll"><table>
+<tr><th>Function</th><th>Gives</th></tr>
+<tr><td><code>td.digitise(image, …)</code></td><td>lines: <code>result.trace_data</code>, <code>.panels</code>, <code>.warnings</code>, <code>.provenance</code>, <code>.resample(interval)</code>, <code>.overlay()</code>, <code>.plot()</code></td></tr>
+<tr><td><code>td.digitise_points</code>, <code>_bars</code>, <code>_rows</code>, <code>_heatmap</code>, <code>_polar</code></td><td>a <code>FigureResult</code>: <code>.data</code>, <code>.panels</code>, <code>.warnings</code>, <code>.provenance</code>, <code>.csv_path</code>, <code>.overlay()</code></td></tr>
+<tr><td><code>td.describe_figure(image)</code></td><td>what is found: plot areas, tick marks, labels read and the scales they give, colours, a colour bar, polar axes</td></tr>
+<tr><td><code>td.pixels_to_values(points, x_ref=…, y_ref=…)</code></td><td>pixel positions in the axes' units</td></tr>
+<tr><td><code>td.find_polar_axes(rgb)</code></td><td>a polar plot's centre, radius and rings</td></tr>
+</table></div>
+<h2>Options every reader but polar takes</h2>
+<p><code>plot_area</code>, <code>exclude</code> (pixel boxes: left, top, right, bottom), <code>y_ref</code>, <code>x_ref</code> (lists of (pixel, value), or a dict of them by panel number), <code>y_min</code>/<code>y_max</code>, <code>x_min</code>/<code>x_max</code>, <code>y_scale</code>/<code>x_scale</code> (<code>"auto"</code>, <code>"linear"</code>, <code>"log"</code>), <code>y_axis="right"</code>, <code>ocr=False</code>, <code>straighten</code> (<code>"auto"</code>, <code>False</code> or degrees), <code>output_dir</code>, <code>write_outputs=False</code>, <code>save_overlay=True</code>. Then each reader's own: <code>help(td.digitise_rows)</code> lists them.</p>
+<p>The full documentation is trace-digitiser's README, <a href="https://github.com/comparativechrono/trace-digitiser" target="_blank" rel="noopener">on GitHub</a>.</p>

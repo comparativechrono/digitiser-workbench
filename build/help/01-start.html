@@ -1,0 +1,32 @@
+<!-- id: h-start | title: A first figure | group: Start here | summary: Open a figure, digitise it, see how close it is – five minutes | keys: start first quick begin tutorial try example -->
+<h1><!--ICON:play-->A first figure</h1>
+<p class="lede">Five minutes with Figure 3c of the examples: a dot for each ten-year window, with a grey confidence interval on each. You will open it, let trace-digitiser look at it, digitise it, check the result against the values the figure was drawn from, and see the command and the Python that do the same.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3c.png" alt="Figure 3c: dots joined by a line, with grey horizontal confidence intervals" width="260">
+
+<h2>1 · Open it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png">Open Figure 3c</button></div>
+<p>The picture appears in the Digitise tab. The first time, Python takes a little while to start (it downloads about 30 MB, which your browser then keeps); the dot at the bottom right of the tab turns green when it is ready.</p>
+
+<h2>2 · Look at what trace-digitiser sees</h2>
+<p>As soon as Python is ready it <b>looks</b> at the figure. On the right, under <b>What trace-digitiser sees</b>, it lists the plot area it found, what it read from each axis's labels, and the colours drawn. Over the picture, a dashed blue box marks the plot area and small green labels show what it read beside each tick: <i>1960 … 2010</i> down the y axis and <i>0.1 … 0.7</i> along the x axis. Green means the scale rests on that label. Use the mouse wheel to zoom, and drag to move the picture.</p>
+
+<h2>3 · Digitise</h2>
+<p>The kind of figure is <b>Points</b> (chosen for you, as this is one of the examples). Press <b>Digitise as points</b>. In a second or two, every dot found is circled in pink over the picture, with its confidence interval in blue, and the side panel shows a table of the values.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png" data-dg-run>Open it and digitise it</button></div>
+<p>Read the <b>Check</b> list. Here it says that the y axis was read as running downwards – which is right: the years go down the page in this figure. It says so because negative numbers whose minus signs were missed look the same.</p>
+
+<h2>4 · How close is it?</h2>
+<p>For the examples, <b>Compare with the known values</b> appears under the result (it runs by itself after each run). For Figure 3c it finds <span class="known">all 51 windows</span>, with a typical error of <span class="known">0.0004 radians</span> in the circular SD – <span class="known">0.05% of the axis</span>, a small part of a pixel – and the same for the ends of the confidence intervals.</p>
+
+<h2>5 · The same in the terminal and in Python</h2>
+<p>Under the comparison are the command and the Python that do what you just did. That is how you would digitise many figures at once, or on your own computer:</p>
+<pre class="code" data-run="term"><code>trace-digitiser points /data/examples/hearn-whitmore-2026/figure-3c.png -o ~/results/figure-3c --overlay
+compare-known ~/results/figure-3c/figure-3c_points.csv</code></pre>
+<p>The files are in <code>~/results/figure-3c</code>: the table (<code>figure-3c_points.csv</code>), a record of how it was made (<code>…_provenance.json</code>) and a picture of what was found (<code>…_overlay.png</code>). <a href="#h-results">What comes out</a> explains them.</p>
+
+<h2>Next</h2>
+<ul>
+<li><a href="#h-walks">The examples</a>: a walkthrough for each kind of figure, from the easy to the awkward – two y axes, an inset, a scan, a heat map, a polar plot.</li>
+<li><a href="#h-digitise">The Digitise tab</a>: every tool, and what each part of the tab is.</li>
+<li><a href="#h-notebook">The Notebook tab</a>: trace-digitiser in Python, and what to do with the values.</li>
+</ul>

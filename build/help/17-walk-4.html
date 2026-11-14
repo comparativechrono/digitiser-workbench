@@ -1,0 +1,12 @@
+<!-- id: h-walk-4 | title: Six heat maps: Figure 4 | group: Walkthroughs: the examples | summary: Six heat maps sharing one colour bar | keys: heat map heatmap colour bar colorbar viridis cells rows columns grid -->
+<h1><!--ICON:heatmap-->Six heat maps: Figure 4</h1>
+<p class="lede">Six heat maps in two rows: the correlation of light, photoperiod and temperature with the birth rate, at lags of −20 to 0 months (down) and for each 60-month window (across), raw above and deseasoned below. One colour bar, from −1 (dark purple) to 1 (yellow), serves them all.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-4.png" alt="Figure 4" width="100%">
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-4.png">Open Figure 4</button></div>
+<p>It finds six plot areas – one of them by its frame alone, because the dark colours beside it hide its axis lines – and the colour bar. A heat map's value is read from its colour: each colour is looked up on the colour bar, whose scale is read from its labels like an axis's.</p>
+<p>Each map has 21 rows (lags −20 … 0). Its 685 columns are narrower than a pixel, so they can't be told apart: each column of pixels is read as it is. So give <b>Rows</b> <kbd>21</kbd> and leave <b>Columns</b> empty.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-4.png" data-dg-set='{"kind":"heatmap","marks":{"areas":[],"exclude":[],"ticks":[],"colours":[],"colourbar":null},"options":{"rows":"21"}}' data-dg-run>Fill it in for me, and digitise</button></div>
+<p>Typical errors from <span class="known">0.009 to 0.017 (0.5–0.9% of the colour bar)</span>, over 48,000 cells. Move the mouse over a map: the status bar gives the value of the cell under it. The <b>Check</b> list says the colour bar's scale was read with medium confidence – check its values (1, 0.75 … −1) against the figure; if they were wrong, you would give its ends as <b>Colour bar ends</b> <kbd>-1,1</kbd>.</p>
+<p>The x axes are labelled with dates (<i>1957-12</i>), which are not numbers. For values in years, mark two of their ticks with decimal years: December 1957 is 1957.96, December 2014 is 2014.96.</p>
+<pre class="code" data-run="term"><code>trace-digitiser heatmap /data/examples/hearn-whitmore-2026/figure-4.png --rows 21 -o ~/results/figure-4
+compare-known ~/results/figure-4/figure-4_heatmap.csv</code></pre>

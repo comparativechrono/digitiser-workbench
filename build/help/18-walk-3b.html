@@ -1,0 +1,18 @@
+<!-- id: h-walk-3b | title: A polar plot, put right by hand: Figure 3b | group: Walkthroughs: the examples | summary: Rings and their values, and points taken out and put in with the mouse | keys: polar circular angle phase radius rings centre edit points manual add remove overlapping -->
+<h1><!--ICON:polar-->A polar plot, put right by hand: Figure 3b</h1>
+<p class="lede">A dot for each year from 1955 to 2014: its angle is the phase of that year's peak of births, and it lies further out each year – the rings are labelled 1955 (innermost) to 2005. The dots are joined by a line, and where the phase moved little they crowd together.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3b.png" alt="Figure 3b" width="280">
+<h2>1 · The radial scale</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3b.png">Open Figure 3b</button></div>
+<p>The kind is <b>Polar</b>. trace-digitiser finds the centre and the rings itself (drawn in blue). Their labels are years, so tell it two: choose the <b>Ring</b> tool, click on the innermost ring (it snaps to it) and type <kbd>1955</kbd>, then on the outermost labelled ring, <kbd>2005</kbd>. A dot's distance from the centre is then its year. Pick the blue of the dots with <b>Colour</b>.</p>
+<h2>2 · Digitise</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3b.png" data-dg-set='{"kind":"polar","marks":{"colours":["#1f77b4"],"rings":[{"r":5,"value":1955},{"r":250,"value":2005}],"centre":null}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p><span class="known">50 of the 60 years</span> are found, with a typical error of <span class="known">0.13°</span> in their angle; and 15 other points, where dots crowd onto each other and onto the line. Angles are measured as matplotlib draws them: 0 to the right, anticlockwise (change it under the kind's options for a plot drawn like a clock).</p>
+<h2>3 · Put it right by hand</h2>
+<p>This is what the <b>Edit points</b> tool is for. Zoom in where the dots crowd (the mouse wheel), then:</p>
+<ul>
+<li>click a pink circle that is not on a dot of its own – on the line between two, or a second circle on one dot – to take it out (it is crossed in red; click again to put it back);</li>
+<li>click on a dot that has no pink circle to put a point there (a blue cross).</li>
+</ul>
+<p>The status bar gives the angle and year under the mouse. Then <b>Save the edited table</b>: it is written beside the first as <code>figure-3b_polar_edited.csv</code>, with the values of the points you added worked out from the same scale, and an <code>edited</code> column that says which they were. The comparison runs again on it: with every dot found once and nothing else, all 60 years are there.</p>
+<pre class="code" data-run="term"><code>compare-known ~/results/figure-3b/figure-3b_polar_edited.csv</code></pre>

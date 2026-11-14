@@ -1,0 +1,11 @@
+<!-- id: h-points | title: Points | group: Kinds of figure | summary: Markers of any shape, and their error bars | keys: points markers scatter dot plot error bars caps overlapping marker size colour tolerance series -->
+<h1><!--ICON:scatter-->Points</h1>
+<p class="lede">Every marker – dot, square, triangle, diamond, filled or not – of the colours read, with its position in pixels and in the axes' units, and its error bars.</p>
+<ul>
+<li><b>Series</b>: one per colour. Without colours picked, every colour that holds markers is a series.</li>
+<li><b>Overlapping markers</b> are separated by their size, and the Check list says where; markers cut by a line or a gridline are put together again.</li>
+<li><b>Marker size</b>: found from the markers themselves; give it (the diameter in pixels) when they are tiny or all overlap.</li>
+<li><b>Error bars</b>: <i>auto</i> keeps those found on most of a series' points; or choose up-and-down, across, both or none. Each end is found at the middle of its cap; <code>x_error_capped</code> / <code>y_error_capped</code> say whether there was one.</li>
+<li><b>Colour tolerance</b>: how far (0–441 in RGB) a pixel's colour may be from the colour picked – raise it for a scan, lower it when two series' colours are close.</li>
+</ul>
+<p>Walkthroughs: <a href="#h-walk-3c">Figure 3c</a>, <a href="#h-walk-s3">Supplementary Figure 3</a>.</p>

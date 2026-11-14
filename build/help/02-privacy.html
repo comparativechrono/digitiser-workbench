@@ -1,0 +1,19 @@
+<!-- id: h-privacy | title: Nothing leaves your browser | group: Start here | summary: Where your pictures go (nowhere), and what the page fetches | keys: privacy upload copyright server data security offline local -->
+<h1><!--ICON:lock-->Nothing leaves your browser</h1>
+<p class="lede">The workbench was made so that a figure can be digitised without sending it anywhere: not to a server, not to an AI model. Everything that reads the picture runs inside this web page, on your computer.</p>
+
+<h2>What runs where</h2>
+<table>
+<tr><th>What</th><th>Where it runs</th></tr>
+<tr><td>Python, with trace-digitiser, NumPy, OpenCV, pandas, Matplotlib</td><td>In this page (Pyodide: Python compiled to WebAssembly), in a background thread of the browser.</td></tr>
+<tr><td>Tesseract, which reads the axes' tick labels</td><td>In this page, compiled to WebAssembly, beside Python.</td></tr>
+<tr><td>PDF pages drawn as pictures</td><td>In this page (PDF.js).</td></tr>
+<tr><td>Your files – pictures, results, notebooks</td><td>Kept in this browser's own storage, on this computer (<a href="#h-files">Your files</a>).</td></tr>
+</table>
+<p>The page does fetch some things – never anything of yours, and nothing that knows what you open: the web page itself and its parts from GitHub Pages, and Python and its packages from jsDelivr, a public server for such packages. After the first visit the browser keeps them.</p>
+
+<h2>The AI assistant</h2>
+<p>The AI tab does nothing until you give it a key of your own for an AI service. Then what you type, and what you tick below the message box, goes to that service – and only that. It is never sent a picture, nor the values read from one, nor what is in your files: for the Digitise tab it is told the picture's name and size, your marks and settings, what trace-digitiser read from the axes, and the last run's messages. <a href="#h-ai">The AI assistant</a> lists exactly what each tick sends.</p>
+
+<h2>Copyright</h2>
+<p>Facts – the values a graph shows – are not protected by copyright in most countries, and digitising a published figure to analyse its values is common in research (meta-analyses depend on it). The picture itself is the publisher's or the authors': keeping a copy for your own work is one thing, publishing it again another. When you use values you have digitised, say which figure of which paper they come from, and that they were digitised (trace-digitiser's provenance file records how). We are not lawyers: if in doubt, ask your library.</p>

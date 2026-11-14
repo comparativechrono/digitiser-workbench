@@ -1,0 +1,10 @@
+<!-- id: h-heatmap | title: Heat maps | group: Kinds of figure | summary: Each cell's value, from its colour on the colour bar | keys: heat map heatmap colour bar colorbar colormap viridis cells grid matrix correlation -->
+<h1><!--ICON:heatmap-->Heat maps</h1>
+<p class="lede">Each cell's value, from its colour: the colour is found on the colour bar (in CIELAB, where distance matches what the eye sees), between the bar's two nearest colours. The bar's scale is read from its labels, like an axis's.</p>
+<ul>
+<li><b>The colour bar</b> is found by itself; mark it (<b>Colour bar</b>) if not. Its ends can be given (<b>Colour bar ends</b>, <kbd>-1,1</kbd>) when its labels can't be read.</li>
+<li><b>No colour bar</b>? Name matplotlib's colour map (<kbd>viridis</kbd>, <kbd>magma</kbd>, <kbd>RdBu_r</kbd>…) with its smallest and largest values.</li>
+<li><b>Cells</b>: how many rows and columns are found from the picture; give them when you know them. Cells narrower than a pixel can't be told apart: then each column of pixels is a cell.</li>
+<li><code>colour_error</code> in the table says how far a cell's colour is from the bar; cells far from it (text, gridlines) have no value.</li>
+</ul>
+<p>Walkthrough: <a href="#h-walk-4">Figure 4</a>.</p>

@@ -1,0 +1,13 @@
+<!-- id: h-walk-1b | title: Bars, and a scan: Figure 1b | group: Walkthroughs: the examples | summary: Bars that hang below zero, with error bars – and the same figure scanned | keys: bars bar chart error bars negative baseline scan scanned straighten tilt -->
+<h1><!--ICON:bars-->Bars, and a scan: Figure 1b</h1>
+<p class="lede">Twelve bars, one for each month: how many fewer births there were from 1975 on than in 1955–1974, in per cent. They hang down from zero, and each has an error bar of one bootstrap standard error.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-1b.png" alt="Figure 1b" width="260">
+<h2>Digitise it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b.png">Open Figure 1b</button> <button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b.png" data-dg-run>Open and digitise</button></div>
+<p>The kind is <b>Bars</b>. Digitise: the 12 bars are found, each from its baseline – the zero line, read from the y axis – to its end, with a typical error of <span class="known">0.05 percentage points (0.2% of the axis)</span>. Each error bar reaches <span class="known">1.35</span> either side: the notebook drew one bootstrap standard error from 1000 unseeded samples, so this figure is the only record of its value.</p>
+<p>Two things in the <b>Check</b> list: the x axis is not calibrated – its labels are month names, not numbers, so each bar has its <code>x_pixel</code> and its place (<code>bar</code>) but no <code>x_value</code> – and a patch of the bar colour that doesn't reach the baseline was left out: the legend's.</p>
+<h2>The scanned copy</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b-scanned.jpg">Open the scanned copy</button></div>
+<p>It is tilted 1.2°. <b>Straighten it</b>, then digitise as bars: the same 12 bars, typical error <span class="known">0.05 points (0.18%)</span>, error bars 1.35. Not straightened, only 9 bars are found, with errors of 15 points or more – one more reason to straighten every scan.</p>
+<pre class="code" data-run="term"><code>trace-digitiser bars /data/examples/hearn-whitmore-2026/figure-1b-scanned.jpg -o ~/results/figure-1b-scanned --overlay
+compare-known ~/results/figure-1b-scanned/figure-1b-scanned_bars.csv</code></pre>

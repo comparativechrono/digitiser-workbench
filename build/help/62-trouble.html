@@ -1,0 +1,10 @@
+<!-- id: h-trouble | title: When something goes wrong | group: Reference | summary: Python doesn't start, it is slow, the page forgets | keys: troubleshoot problem slow python start fail memory reload browser error -->
+<h1><!--ICON:warning-->When something goes wrong</h1>
+<dl>
+<dt>Python doesn't start</dt><dd>The first time, it downloads about 30 MB (from cdn.jsdelivr.net): check the connection, and that nothing blocks that site. Reload the page to try again. A current Chrome, Edge, Firefox or Safari is needed.</dd>
+<dt>It is slow</dt><dd>The first look at a figure imports trace-digitiser (a few seconds). Figures with many tick labels (Figure 2's 59) take longer: Tesseract reads each label several ways. Very large pictures are slow – crop them to the figure.</dd>
+<dt>"Tesseract …" in a message, or no axis read at all</dt><dd>The status bar of the Digitise tab says whether Tesseract loaded. If not, reload; meanwhile, give the axes with ticks.</dd>
+<dt>The page forgot my files</dt><dd>They are kept in this browser: another browser, a private window or cleared site data doesn't have them. Download what you want to keep.</dd>
+<dt>The workbench is open twice</dt><dd>Two tabs share one storage and can overwrite each other's files: use one.</dd>
+<dt>Something else</dt><dd>Restart Python (the Notebook tab's restart button) or reload the page. The AI tab can help you read an error message.</dd>
+</dl>

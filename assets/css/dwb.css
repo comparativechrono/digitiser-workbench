@@ -1,0 +1,154 @@
+/* =====================================================================
+   The Digitiser workbench's own styles: the Digitise tab (digitise.js),
+   and the help's tables. The rest is shared with our other workbenches
+   (app.css, wb.css, genomics.css, nb-ai.css, ai.css).
+   ===================================================================== */
+
+/* ---------------- the help ---------------- */
+.help-page td, .help-page th { overflow-wrap: anywhere; }
+@media (min-width: 700px) {
+  .help-page table td:first-child { min-width: 7.5em; }
+}
+.help-xscroll { overflow-x: auto; }
+.modal-b h4 { margin: 12px 0 4px; font-size: 13.5px; color: var(--ink-2); }
+.help-page .dg-figure { display: block; max-width: 100%; margin: 0.6em 0; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+.help-page .known { color: var(--good); font-weight: 600; }
+.help-page .steps > li { margin: 0.35em 0; }
+.help-page kbd { padding: 0 4px; border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 4px; background: var(--panel-2); font: 12px var(--mono); }
+.help-page .chip { display: inline-block; width: 0.95em; height: 0.95em; border-radius: 3px; vertical-align: -0.1em; border: 1px solid rgba(0, 0, 0, 0.25); }
+
+/* ---------------- the Digitise tab ---------------- */
+.dg { display: flex; flex-direction: column; height: 100%; min-height: 0; background: var(--panel); container-type: inline-size; container-name: dg; }
+.dg-bar { display: flex; align-items: center; gap: 4px 6px; padding: 6px 10px; border-bottom: 1px solid var(--line); background: var(--panel); overflow-x: auto; scrollbar-width: thin; }
+.dg-bar > * { flex: none; }
+.dg-bar .grow { flex: 1; }
+.dg-name { max-width: 28ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 13px var(--mono); color: var(--ink-2); }
+.dg-sep { width: 1px; height: 22px; background: var(--line); margin: 0 4px; }
+.dg-tools { display: flex; flex-wrap: wrap; gap: 2px; }
+.dg-tool.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-2); }
+.dg-tool:disabled { opacity: 0.45; cursor: default; }
+.dg-zoom { min-width: 58px; justify-content: center; font-variant-numeric: tabular-nums; }
+.dg-main { flex: 1; display: flex; min-height: 0; }
+.dg-left { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dg-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; background: repeating-conic-gradient(#eef1f5 0 25%, #f6f8fa 0 50%) 0 0 / 22px 22px; outline: none; touch-action: none; cursor: grab; }
+.dg-stage:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.dg-stage.panning { cursor: grabbing; }
+.dg-stage[data-tool='area'], .dg-stage[data-tool='exclude'], .dg-stage[data-tool='bar'], .dg-stage[data-tool='crop'], .dg-stage[data-tool='tick'], .dg-stage[data-tool='centre'], .dg-stage[data-tool='ring'], .dg-stage[data-tool='edit'] { cursor: crosshair; }
+.dg-stage[data-tool='colour'] { cursor: copy; }
+.dg-stage.drop { box-shadow: inset 0 0 0 3px var(--accent); }
+.dg-canvas { position: absolute; inset: 0; display: block; }
+.dg-loupe { position: absolute; top: 10px; right: 10px; width: 132px; height: 132px; border: 2px solid #fff; border-radius: 8px; box-shadow: var(--shadow-l); background: #fff; pointer-events: none; image-rendering: pixelated; }
+.dg-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.dg-empty[hidden] { display: none; }
+.dg-welcome { max-width: 560px; padding: 22px 26px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow); text-align: center; }
+.dg-welcome > .ic { width: 40px; height: 40px; color: var(--accent); }
+.dg-welcome h3 { margin: 6px 0; }
+.dg-welcome p { color: var(--ink-2); line-height: 1.5; }
+.dg-welcome-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 12px 0 4px; }
+.dg-pop { position: absolute; z-index: 5; width: 260px; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: var(--radius-s); background: var(--panel); box-shadow: var(--shadow-l); font-size: 13px; }
+.dg-pop[hidden] { display: none; }
+.dg-pop label { display: block; margin-bottom: 6px; color: var(--ink-2); }
+.dg-pop-row { display: flex; gap: 6px; }
+.dg-pop input { flex: 1; min-width: 0; padding: 5px 7px; border: 1px solid var(--line-2); border-radius: var(--radius-s); font: 14px var(--mono); }
+.dg-status { display: flex; align-items: center; gap: 10px; min-height: 26px; padding: 3px 10px; border-top: 1px solid var(--line); background: var(--panel-2); font-size: 12px; color: var(--ink-2); }
+.dg-status .grow { flex: 1; }
+.dg-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.dg-py { flex: none; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dg-py::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--line-2); }
+.dg-py.ok::before { background: var(--good); }
+.dg-py.wait::before { background: #e0a800; animation: dg-blink 1s infinite; }
+.dg-py.bad { color: var(--bad); }
+.dg-py.bad::before { background: var(--bad); }
+@keyframes dg-blink { 50% { opacity: 0.25; } }
+
+.dg-side { width: 340px; flex: none; overflow-y: auto; border-left: 1px solid var(--line); background: var(--panel-2); padding: 4px 12px 60px; font-size: 13.5px; }
+.dg-sec { padding: 10px 0 12px; border-bottom: 1px solid var(--line); }
+.dg-sec:empty { display: none; }
+.dg-sec h3 { margin: 2px 0 6px; font-size: 14px; color: var(--ink); }
+.dg-sec h4 { margin: 12px 0 4px; font-size: 12.5px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+.dg-sec p { margin: 4px 0; line-height: 1.45; }
+.dg-sec .sm, .dg-side .sm { font-size: 12.5px; }
+.dg-side .muted { color: var(--muted); }
+.btn.sm, .dg-side .btn.sm { padding: 3px 9px; font-size: 12.5px; }
+.icon-btn.sm { width: 24px; height: 24px; }
+.icon-btn.sm .ic { width: 14px; height: 14px; }
+.dg-note { margin: 8px 0; padding: 8px 10px; border: 1px solid #f0c36d; border-radius: var(--radius-s); background: var(--warn-soft); }
+.dg-warn { color: var(--warn); font-size: 12.5px; }
+.dg-found .dg-fp { margin: 6px 0; padding: 6px 8px; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--panel); }
+.dg-fp-h { display: flex; align-items: center; gap: 6px; }
+.dg-fp-h .grow { flex: 1; }
+.dg-fp ul { margin: 4px 0 0; padding-left: 18px; }
+.dg-fp li { margin: 2px 0; }
+.dg-chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid rgba(0, 0, 0, 0.25); vertical-align: -2px; }
+.dg-chips { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
+button.dg-chip { width: 18px; height: 18px; padding: 0; cursor: pointer; }
+button.dg-chip:hover, button.dg-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.dg-marks { list-style: none; margin: 4px 0 8px; padding: 0; }
+.dg-marks li { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+.dg-mi .ic { width: 14px; height: 14px; color: var(--muted); }
+.dg-mt { flex: 1; font: 12.5px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dg-kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.dg-kind { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--panel); font: 12.5px var(--font); color: var(--ink-2); cursor: pointer; }
+.dg-kind .ic { width: 20px; height: 20px; }
+.dg-kind:hover { border-color: var(--line-2); }
+.dg-kind.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-2); font-weight: 600; }
+.dg-fields { display: grid; gap: 8px; margin-top: 8px; }
+.dg-field { display: grid; gap: 2px; }
+.dg-fl { font-weight: 600; font-size: 12.5px; color: var(--ink-2); }
+.dg-field input, .dg-field select { width: 100%; padding: 4px 6px; border: 1px solid var(--line-2); border-radius: var(--radius-s); background: #fff; font: 13px var(--font); color: var(--ink); }
+.dg-field input:focus, .dg-field select:focus { outline: 2px solid var(--accent); outline-offset: 0; }
+.dg-field small { font-size: 11.5px; line-height: 1.35; }
+.dg-two { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.dg-more { margin-top: 10px; padding: 6px 8px; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--panel); }
+.dg-more summary { cursor: pointer; font-weight: 600; font-size: 12.5px; color: var(--accent-2); }
+.dg-more[open] { display: grid; gap: 8px; }
+.dg-run { margin-bottom: 8px; }
+.dg-go { width: 100%; justify-content: center; padding: 8px 10px; font-size: 14px; }
+.dg-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+.dg-checks { margin: 4px 0; padding-left: 18px; color: var(--warn); font-size: 12.5px; line-height: 1.4; }
+.dg-checks li { margin: 3px 0; }
+.dg-cmp { margin: 6px 0; padding: 6px 8px 6px 24px; border: 1px solid #b9e2c9; border-radius: var(--radius-s); background: var(--good-soft); font-size: 12.5px; line-height: 1.45; }
+.dg-table { max-height: 240px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-s); background: #fff; }
+.dg-table table { border-collapse: collapse; font: 11.5px var(--mono); }
+.dg-table th, .dg-table td { padding: 2px 6px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.dg-table th { position: sticky; top: 0; background: var(--panel-2); font-weight: 600; }
+.dg-files { margin: 2px 0; padding-left: 18px; font-size: 12px; }
+.dg-files .linkbtn { font: 12px var(--mono); text-align: left; overflow-wrap: anywhere; }
+.dg-code h4 { margin-top: 14px; }
+.dg-code pre { margin: 0; max-height: 220px; overflow: auto; padding: 8px 10px; border-radius: var(--radius-s); background: #0f172a; color: #e2e8f0; font: 12px/1.45 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.dg-err { white-space: pre-wrap; overflow-wrap: anywhere; padding: 8px; border-radius: var(--radius-s); background: var(--bad-soft); color: var(--bad); font: 12px var(--mono); }
+.dg-inline { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 10px; font-size: 13px; }
+.spin .ic { animation: dg-turn 1s linear infinite; }
+@keyframes dg-turn { to { transform: rotate(360deg); } }
+
+/* opening: the examples, your pictures, the pages of a PDF */
+.modal.dg-open-modal { width: min(920px, 96vw); }
+.dg-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 6px 0 10px; }
+.dg-thumb { display: flex; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--panel); cursor: pointer; font: 12px var(--mono); color: var(--ink-2); }
+.dg-thumb img { width: 100%; height: 96px; object-fit: contain; background: #fff; }
+.dg-thumb:hover, .dg-thumb:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.dg-pages .dg-thumb img, .dg-page-ph { height: 150px; }
+.dg-page-ph { background: linear-gradient(90deg, #f1f4f8, #e7ecf2, #f1f4f8); }
+.dg-mine { display: grid; gap: 2px; max-height: 200px; overflow-y: auto; margin: 4px 0 8px; }
+.dg-file { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: var(--radius-s); background: none; text-align: left; font: 12.5px var(--mono); color: var(--ink); cursor: pointer; }
+.dg-file:hover, .dg-file:focus-visible { background: var(--accent-soft); }
+.dg-file .ic { width: 15px; height: 15px; flex: none; color: var(--muted); }
+
+/* a bench of middling width: the tools keep only their icons, but for the one in use */
+@container dg (max-width: 1180px) {
+  .dg-tool:not(.on) span { display: none; }
+  .dg-bar > .tbtn:not(.dg-zoom) span { display: none; }
+}
+/* a narrow bench: the side panel goes under the picture */
+@container dg (max-width: 820px) {
+  .dg-main { flex-direction: column; overflow-y: auto; }
+  .dg-left { flex: none; height: 62vh; }
+  .dg-side { width: auto; border-left: 0; border-top: 1px solid var(--line); overflow: visible; }
+  .dg-tool span, .dg-bar > .tbtn span { display: none; }
+}
+@media (max-width: 900px) {
+  .dg-main { flex-direction: column; overflow-y: auto; }
+  .dg-left { flex: none; height: 60vh; }
+  .dg-side { width: auto; border-left: 0; border-top: 1px solid var(--line); overflow: visible; }
+  .dg-tool span { display: none; }
+}

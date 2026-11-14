@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digitiser workbench</title>
+<meta name="description" content="Read the values out of graphs in papers – lines, points, bars, actograms, heat maps and polar plots – with trace-digitiser, by pointing and clicking, in a Python notebook or in a terminal. Everything runs in your browser: no picture is uploaded anywhere.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect x='4' y='4' width='120' height='120' rx='26' fill='%2317324A'/%3E%3Cpath d='M30 24v74h76' fill='none' stroke='%23F3F7FA' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M38 82l20-24 16 10 24-34' fill='none' stroke='%23F59E0B' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='58' cy='58' r='7' fill='%23F3F7FA'/%3E%3Ccircle cx='98' cy='34' r='7' fill='%23F3F7FA'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/vendor/codemirror/codemirror.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/genomics.css">
+<link rel="stylesheet" href="assets/css/nb-ai.css">
+<link rel="stylesheet" href="assets/css/wb.css">
+<link rel="stylesheet" href="assets/css/ai.css">
+<link rel="stylesheet" href="assets/css/dwb.css">
+</head>
+<body data-page="workbench" data-title="Digitiser workbench">
+<div class="app">
+
+  <header class="topbar">
+    <button class="tbtn top-toggle" id="helpToggle" type="button" title="Show or hide the help (Ctrl+\)" aria-controls="helpPane" aria-expanded="true"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg></button>
+    <a class="brand" href="#" title="Digitiser workbench">
+      <svg class="brand-mark" viewBox="0 0 128 128" aria-hidden="true"><rect x="4" y="4" width="120" height="120" rx="26" fill="#17324A"/><path d="M30 24v74h76" fill="none" stroke="#F3F7FA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M38 82l20-24 16 10 24-34" fill="none" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="58" cy="58" r="7" fill="#F3F7FA"/><circle cx="98" cy="34" r="7" fill="#F3F7FA"/></svg>
+      <div>
+        <div class="brand-title">Digitiser workbench</div>
+        <div class="brand-sub">Read the values out of graphs in papers – with trace-digitiser, in your browser, where nothing is uploaded</div>
+      </div>
+    </a>
+    <div class="spacer"></div>
+    <span class="store-status" id="storeStatus" title="Your files are kept in this browser, on this computer"></span>
+    <button class="btn" id="userBtn" type="button" title="Put your name into the workbench, and the terminal will show it in place of user"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="user-name">user</span></button>
+    <button class="btn" id="projectBtn" type="button" title="Download all your files, add files, or start afresh"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H7l-4 9z"/><path d="M3 19l3.5-8H22l-3.5 8z"/></svg><span>My files</span></button>
+    <button class="btn" id="fullBtn" type="button" title="Full screen (F11 also works)"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span>Full screen</span></button>
+  </header>
+
+  <div class="main">
+    <aside class="tut help-pane" id="helpPane" aria-label="Help">
+      <div class="help-head">
+        <button class="icon-btn help-home" type="button" title="Help: all topics" data-goto="h-home"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/></svg></button>
+        <div class="help-search"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="helpSearch" type="search" placeholder="Search the help (e.g. points, tick, PDF)" autocomplete="off" aria-label="Search the help"></div>
+        <button class="icon-btn help-collapse" id="helpCollapse" type="button" title="Hide the help so the workbench fills the window (Ctrl+\)"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></svg></button>
+      </div>
+      <div class="help-crumbs" id="helpCrumbs"></div>
+      <div class="help-body" id="helpBody">
+<article class="help-page" id="h-home" data-title="Help" data-group="Start here" data-group-page="h-home" data-keys="help index topics contents start" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1.3"/><circle cx="10" cy="11" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="7" r="1.3"/></svg>The Digitiser workbench</h1>
+<p class="lede">Read the values out of graphs in papers – lines, points with their error bars, bars, actograms and other stacked rows, heat maps and polar plots – with <b>trace-digitiser</b>, our Python package. Point and click in the <b>Digitise</b> tab, write Python in the <b>Notebook</b> tab, or type commands in the <b>Terminal</b> tab: all three run the same package. Everything runs here, in your browser. No picture is uploaded anywhere and no AI model looks at it, so you can digitise a figure of an old paper without sending it to anyone.</p>
+<div class="help-start">
+  <button type="button" data-goto="h-start"><b><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z"/></svg>A first figure</b><span>five minutes: open, digitise, check</span></button>
+  <button type="button" data-goto="h-walks"><b><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 6H15a3.5 3.5 0 0 1 0 7H9a3.5 3.5 0 0 0 0 7h7.5"/></svg>The examples</b><span>a walkthrough for every kind of figure</span></button>
+  <button type="button" data-bench="digitise"><b><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1.3"/><circle cx="10" cy="11" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="7" r="1.3"/></svg>Digitise</b><span>a picture, and the mouse</span></button>
+  <button type="button" data-goto="h-notebook"><b><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12 8h4M12 12h4"/></svg>Notebook</b><span>trace-digitiser in Python</span></button>
+  <button type="button" data-goto="h-terminal"><b><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17l6-5-6-5M12 19h8"/></svg>Terminal</b><span>trace-digitiser as a command</span></button>
+</div>
+
+<div class="callout info"><div class="co-t"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>Everything stays on this computer</div>
+<p>Python (Pyodide) and Tesseract, which reads the axes' labels, run inside this web page. Your pictures and results are kept in this browser, on this computer. The only things the page fetches from elsewhere are Python itself and its packages, from a public server (jsDelivr) – never anything of yours. The AI assistant is the one exception, and only if you set it up with a key of your own: even then it is never sent a picture. <a href="#h-privacy">Nothing leaves your browser</a> has the details.</p></div>
+
+<h2>How the help works</h2>
+<p>The walkthroughs use the figures of one of our own papers, <i>Hearn and Whitmore (2026)</i>, whose data we have, so you can see exactly how close a digitisation comes. Buttons like this one do things in the workbench for you:</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png">Open Figure 3c in the Digitise tab</button></div>
+<p>Code in a box has buttons to run it in the Terminal or add it to a notebook. Hide this pane with the button at its top right (or <kbd>Ctrl</kbd>+<kbd>\</kbd>) when you need the room.</p>
+<div class="help-topics">
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 6H15a3.5 3.5 0 0 1 0 7H9a3.5 3.5 0 0 0 0 7h7.5"/></svg><a href="#h-walks">Walkthroughs: the examples</a></h2><ul>
+<li><a href="#h-walk-3c">Points and error bars: Figure 3c<small>Dots with horizontal confidence intervals, an axis that runs downwards – and a scanned copy</small></a></li>
+<li><a href="#h-walk-1b">Bars, and a scan: Figure 1b<small>Bars that hang below zero, with error bars – and the same figure scanned</small></a></li>
+<li><a href="#h-walk-3a">Two panels, one x axis: Figure 3a<small>Lines in two stacked panels, of which only the lower has x labels; marking ticks</small></a></li>
+<li><a href="#h-walk-1a">Two y axes and an inset: Figure 1a<small>Three lines – one against a second y axis labelled with months, one in an inset – and two legends</small></a></li>
+<li><a href="#h-walk-s3">Panels side by side: Supplementary Figure 3<small>Two panels, two series of points in each, a legend outside, dashed lines</small></a></li>
+<li><a href="#h-walk-2">A birthogram: Figure 2<small>A stack of 59 rows of months, double-plotted, with dots – read like an actogram</small></a></li>
+<li><a href="#h-walk-4">Six heat maps: Figure 4<small>Six heat maps sharing one colour bar</small></a></li>
+<li><a href="#h-walk-3b">A polar plot, put right by hand: Figure 3b<small>Rings and their values, and points taken out and put in with the mouse</small></a></li>
+<li><a href="#h-walk-pdf">A figure in a PDF<small>Choose the page, draw it as a picture, straighten, crop, digitise</small></a></li>
+</ul></section>
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1.3"/><circle cx="10" cy="11" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="7" r="1.3"/></svg><a href="#h-digitise">The Digitise tab</a></h2><ul>
+<li><a href="#h-open">Opening pictures and PDFs<small>Examples, your files, your computer, the clipboard, PDF pages; straightening and cropping</small></a></li>
+<li><a href="#h-marks">Marking the picture<small>Plot areas, regions to leave out, ticks and their values, colours, a colour bar, centre and rings, points by hand</small></a></li>
+<li><a href="#h-results">What comes out<small>The overlay, the Check list, the table, the files, and the command and Python that do the same</small></a></li>
+<li><a href="#h-checking">Checking a digitisation<small>How to tell whether it is right, and what to do when it isn&#x27;t</small></a></li>
+</ul></section>
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg><a href="#h-kinds">Kinds of figure</a></h2><ul>
+<li><a href="#h-lines">Lines<small>A value for each column of pixels of each line</small></a></li>
+<li><a href="#h-points">Points<small>Markers of any shape, and their error bars</small></a></li>
+<li><a href="#h-bars">Bars<small>Where each bar ends, and its error bar</small></a></li>
+<li><a href="#h-rows">Rows: actograms and the like<small>A stack of rows, bin by bin, with the dots that mark a peak</small></a></li>
+<li><a href="#h-heatmap">Heat maps<small>Each cell&#x27;s value, from its colour on the colour bar</small></a></li>
+<li><a href="#h-polar">Polar plots<small>The angle of each point, and its distance from the centre</small></a></li>
+</ul></section>
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17l6-5-6-5M12 19h8"/></svg>Notebook and terminal</h2><ul>
+<li><a href="#h-notebook">The Notebook tab<small>Python notebooks, with trace-digitiser and the starter notebooks</small></a></li>
+<li><a href="#h-python">trace-digitiser in Python<small>The functions, their results, and the options they share</small></a></li>
+<li><a href="#h-terminal">The Terminal tab<small>trace-digitiser as a command, and compare-known</small></a></li>
+<li><a href="#h-own">On your own computer<small>pip install trace-digitiser, and Tesseract</small></a></li>
+</ul></section>
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2 5.5L19.5 10 14 12l-2 5.5L10 12l-5.5-2L10 8.5z"/><path d="M19 17l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>The AI assistant</h2><ul>
+<li><a href="#h-ai">The AI assistant<small>Your own AI model – which never sees your pictures</small></a></li>
+</ul></section>
+<section><h2><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>Reference</h2><ul>
+<li><a href="#h-files">Your files<small>Where they are kept, and how to take them home</small></a></li>
+<li><a href="#h-versions">Versions, and how to cite<small>What runs in the page, and what to cite</small></a></li>
+<li><a href="#h-trouble">When something goes wrong<small>Python doesn&#x27;t start, it is slow, the page forgets</small></a></li>
+<li><a href="#h-credits">Credits<small>What the workbench is made of</small></a></li>
+</ul></section>
+</div>
+</article>
+<article class="help-page" id="h-start" data-title="A first figure" data-group="Start here" data-group-page="h-home" data-keys="start first quick begin tutorial try example" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z"/></svg>A first figure</h1>
+<p class="lede">Five minutes with Figure 3c of the examples: a dot for each ten-year window, with a grey confidence interval on each. You will open it, let trace-digitiser look at it, digitise it, check the result against the values the figure was drawn from, and see the command and the Python that do the same.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3c.png" alt="Figure 3c: dots joined by a line, with grey horizontal confidence intervals" width="260">
+
+<h2>1 · Open it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png">Open Figure 3c</button></div>
+<p>The picture appears in the Digitise tab. The first time, Python takes a little while to start (it downloads about 30 MB, which your browser then keeps); the dot at the bottom right of the tab turns green when it is ready.</p>
+
+<h2>2 · Look at what trace-digitiser sees</h2>
+<p>As soon as Python is ready it <b>looks</b> at the figure. On the right, under <b>What trace-digitiser sees</b>, it lists the plot area it found, what it read from each axis's labels, and the colours drawn. Over the picture, a dashed blue box marks the plot area and small green labels show what it read beside each tick: <i>1960 … 2010</i> down the y axis and <i>0.1 … 0.7</i> along the x axis. Green means the scale rests on that label. Use the mouse wheel to zoom, and drag to move the picture.</p>
+
+<h2>3 · Digitise</h2>
+<p>The kind of figure is <b>Points</b> (chosen for you, as this is one of the examples). Press <b>Digitise as points</b>. In a second or two, every dot found is circled in pink over the picture, with its confidence interval in blue, and the side panel shows a table of the values.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png" data-dg-run>Open it and digitise it</button></div>
+<p>Read the <b>Check</b> list. Here it says that the y axis was read as running downwards – which is right: the years go down the page in this figure. It says so because negative numbers whose minus signs were missed look the same.</p>
+
+<h2>4 · How close is it?</h2>
+<p>For the examples, <b>Compare with the known values</b> appears under the result (it runs by itself after each run). For Figure 3c it finds <span class="known">all 51 windows</span>, with a typical error of <span class="known">0.0004 radians</span> in the circular SD – <span class="known">0.05% of the axis</span>, a small part of a pixel – and the same for the ends of the confidence intervals.</p>
+
+<h2>5 · The same in the terminal and in Python</h2>
+<p>Under the comparison are the command and the Python that do what you just did. That is how you would digitise many figures at once, or on your own computer:</p>
+<pre class="code" data-run="term"><code>trace-digitiser points /data/examples/hearn-whitmore-2026/figure-3c.png -o ~/results/figure-3c --overlay
+compare-known ~/results/figure-3c/figure-3c_points.csv</code></pre>
+<p>The files are in <code>~/results/figure-3c</code>: the table (<code>figure-3c_points.csv</code>), a record of how it was made (<code>…_provenance.json</code>) and a picture of what was found (<code>…_overlay.png</code>). <a href="#h-results">What comes out</a> explains them.</p>
+
+<h2>Next</h2>
+<ul>
+<li><a href="#h-walks">The examples</a>: a walkthrough for each kind of figure, from the easy to the awkward – two y axes, an inset, a scan, a heat map, a polar plot.</li>
+<li><a href="#h-digitise">The Digitise tab</a>: every tool, and what each part of the tab is.</li>
+<li><a href="#h-notebook">The Notebook tab</a>: trace-digitiser in Python, and what to do with the values.</li>
+</ul>
+</article>
+<article class="help-page" id="h-privacy" data-title="Nothing leaves your browser" data-group="Start here" data-group-page="h-home" data-keys="privacy upload copyright server data security offline local" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Nothing leaves your browser</h1>
+<p class="lede">The workbench was made so that a figure can be digitised without sending it anywhere: not to a server, not to an AI model. Everything that reads the picture runs inside this web page, on your computer.</p>
+
+<h2>What runs where</h2>
+<table>
+<tr><th>What</th><th>Where it runs</th></tr>
+<tr><td>Python, with trace-digitiser, NumPy, OpenCV, pandas, Matplotlib</td><td>In this page (Pyodide: Python compiled to WebAssembly), in a background thread of the browser.</td></tr>
+<tr><td>Tesseract, which reads the axes' tick labels</td><td>In this page, compiled to WebAssembly, beside Python.</td></tr>
+<tr><td>PDF pages drawn as pictures</td><td>In this page (PDF.js).</td></tr>
+<tr><td>Your files – pictures, results, notebooks</td><td>Kept in this browser's own storage, on this computer (<a href="#h-files">Your files</a>).</td></tr>
+</table>
+<p>The page does fetch some things – never anything of yours, and nothing that knows what you open: the web page itself and its parts from GitHub Pages, and Python and its packages from jsDelivr, a public server for such packages. After the first visit the browser keeps them.</p>
+
+<h2>The AI assistant</h2>
+<p>The AI tab does nothing until you give it a key of your own for an AI service. Then what you type, and what you tick below the message box, goes to that service – and only that. It is never sent a picture, nor the values read from one, nor what is in your files: for the Digitise tab it is told the picture's name and size, your marks and settings, what trace-digitiser read from the axes, and the last run's messages. <a href="#h-ai">The AI assistant</a> lists exactly what each tick sends.</p>
+
+<h2>Copyright</h2>
+<p>Facts – the values a graph shows – are not protected by copyright in most countries, and digitising a published figure to analyse its values is common in research (meta-analyses depend on it). The picture itself is the publisher's or the authors': keeping a copy for your own work is one thing, publishing it again another. When you use values you have digitised, say which figure of which paper they come from, and that they were digitised (trace-digitiser's provenance file records how). We are not lawyers: if in doubt, ask your library.</p>
+</article>
+<article class="help-page" id="h-walks" data-title="The examples" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="examples walkthroughs tutorials figures paper known values hearn whitmore" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 6H15a3.5 3.5 0 0 1 0 7H9a3.5 3.5 0 0 0 0 7h7.5"/></svg>The examples, and what they teach</h1>
+<p class="lede">The examples are the figures of one of our own papers, so there is no question of anyone else's copyright, and – because the paper's code and data are public – every value they show is known. Each walkthrough digitises one of them and checks the result against those values. Together they cover every kind of figure trace-digitiser reads, and most of the awkward things papers do.</p>
+<blockquote><p>Hearn TJ, Whitmore D (2026). An abrupt mid-1970s shift in UK birth seasonality and its implications for chronobiological studies. <i>Journal of Biological Rhythms</i> 41(1): 28–41. <a href="https://doi.org/10.1177/07487304251384348" target="_blank" rel="noopener">doi:10.1177/07487304251384348</a></p></blockquote>
+<p>The figures are in <code>/data/examples/hearn-whitmore-2026</code> (read-only), each with <code>FIGURE.known.csv</code> beside it: the values it was drawn from, worked out by running the paper's own notebooks on its data (<a href="https://github.com/comparativechrono/Rephasing-of-Seasonal-Birth-Rates-in-the-United-Kingdom-" target="_blank" rel="noopener">the paper's repository</a>). Drawn again from those values, each figure comes out the same, pixel for pixel. The folder's <code>README.md</code> says what each column is.</p>
+<div class="tryrow"><button class="do" type="button" data-open="/data/examples/hearn-whitmore-2026/README.md">Open the README</button></div>
+<div class="help-xscroll"><table>
+<tr><th>Figure</th><th>Kind</th><th>What it teaches</th><th>How close</th></tr>
+<tr><td><a href="#h-walk-3c">3c</a></td><td>points</td><td>error bars; an axis that runs downwards; a scan, and straightening it</td><td>0.05% of the axis</td></tr>
+<tr><td><a href="#h-walk-1b">1b</a></td><td>bars</td><td>bars that hang below zero; error bars; why a scan must be straightened</td><td>0.2%</td></tr>
+<tr><td><a href="#h-walk-3a">3a</a></td><td>lines</td><td>two panels sharing one x axis; marking ticks</td><td>0.3%</td></tr>
+<tr><td><a href="#h-walk-1a">1a</a></td><td>lines</td><td>three lines, a second y axis labelled with words, an inset, legends: colours, regions to leave out, ticks, plot areas</td><td>0.7–1.4%</td></tr>
+<tr><td><a href="#h-walk-s3">S3</a></td><td>points</td><td>panels side by side, two series, overlapping markers</td><td>0.07%</td></tr>
+<tr><td><a href="#h-walk-2">2</a></td><td>rows</td><td>a double-plotted record (like an actogram), with dots</td><td>1.7% of a row</td></tr>
+<tr><td><a href="#h-walk-4">4</a></td><td>heat map</td><td>six heat maps and one colour bar</td><td>0.5–0.9%</td></tr>
+<tr><td><a href="#h-walk-3b">3b</a></td><td>polar</td><td>rings and their values; putting points right by hand</td><td>0.1° in angle</td></tr>
+<tr><td><a href="#h-walk-pdf">PDF</a></td><td>points</td><td>a figure on a scanned page of a PDF</td><td></td></tr>
+</table></div>
+<p><i>How close</i> is the typical (median) error, as a percentage of the axis's span. The rest of this group:</p>
+<ul class="help-grouplist">
+<li><a href="#h-walk-3c">Points and error bars: Figure 3c<small>Dots with horizontal confidence intervals, an axis that runs downwards – and a scanned copy</small></a></li>
+<li><a href="#h-walk-1b">Bars, and a scan: Figure 1b<small>Bars that hang below zero, with error bars – and the same figure scanned</small></a></li>
+<li><a href="#h-walk-3a">Two panels, one x axis: Figure 3a<small>Lines in two stacked panels, of which only the lower has x labels; marking ticks</small></a></li>
+<li><a href="#h-walk-1a">Two y axes and an inset: Figure 1a<small>Three lines – one against a second y axis labelled with months, one in an inset – and two legends</small></a></li>
+<li><a href="#h-walk-s3">Panels side by side: Supplementary Figure 3<small>Two panels, two series of points in each, a legend outside, dashed lines</small></a></li>
+<li><a href="#h-walk-2">A birthogram: Figure 2<small>A stack of 59 rows of months, double-plotted, with dots – read like an actogram</small></a></li>
+<li><a href="#h-walk-4">Six heat maps: Figure 4<small>Six heat maps sharing one colour bar</small></a></li>
+<li><a href="#h-walk-3b">A polar plot, put right by hand: Figure 3b<small>Rings and their values, and points taken out and put in with the mouse</small></a></li>
+<li><a href="#h-walk-pdf">A figure in a PDF<small>Choose the page, draw it as a picture, straighten, crop, digitise</small></a></li>
+</ul>
+</article>
+<article class="help-page" id="h-walk-3c" data-title="Points and error bars: Figure 3c" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="points markers dots error bars confidence interval forest plot scan scanned tilted straighten jpeg" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><circle cx="9" cy="14" r="1.6"/><circle cx="13" cy="9" r="1.6"/><circle cx="17" cy="12" r="1.6"/><circle cx="16" cy="6" r="1.6"/></svg>Points and error bars: Figure 3c</h1>
+<p class="lede">A forest plot: a blue dot for each ten-year window of births, at the circular standard deviation of its peak phase, with grey 95% confidence intervals. The years run down the y axis. Red asterisks mark windows that differ from 1955–1974, and dashed grey lines mark the ticks.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3c.png" alt="Figure 3c" width="240">
+
+<h2>Digitise it</h2>
+<ol class="steps">
+<li>Open it. Once Python has looked at it, the side panel says the y axis's 6 labels agree (1960 … 2010) and the x axis's 7 (0.1 … 0.7), both with high confidence.</li>
+<li>The kind is <b>Points</b>. <b>Error bars</b> is <i>find them (auto)</i>: it keeps those found on most of a series' points.</li>
+<li>Press <b>Digitise as points</b>.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png">Open Figure 3c</button> <button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png" data-dg-run>Open and digitise</button></div>
+<p>All <span class="known">51 windows</span> are found; the comparison gives a typical error of <span class="known">0.0004 rad (0.05% of the axis)</span> for the dots and about the same for the ends of the intervals. The red asterisks are not read as points, because they are another colour that holds no markers; the grey dashed lines don't hide the intervals, which are found to the middle of their caps.</p>
+<p>In the table, <code>x_value</code> is the circular SD and <code>y_value</code> the window's year; <code>x_error_low</code> and <code>x_error_high</code> are the ends of the interval, and <code>x_error_capped</code> says whether a cap was found there.</p>
+<div class="callout info"><div class="co-t"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>"The y axis was read as running downwards"</div><p>Most y axes go up. This one goes down, on purpose – and so does an axis of negative numbers whose minus signs were not read. trace-digitiser can't tell the two apart, so it says what it did. Here it is right; if it weren't, you would mark two ticks and their values (the <b>Tick</b> tool).</p></div>
+
+<h2>The scanned copy</h2>
+<p><code>figure-3c-scanned.jpg</code> is the same figure as if printed and scanned: turned by 0.8°, softened, saved as a JPEG.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c-scanned.jpg">Open the scanned copy</button></div>
+<p>The side panel says it is tilted 0.80° clockwise, and offers to <b>Straighten it</b>. Do: an upright copy is saved as <code>~/pictures/figure-3c-scanned-straightened.png</code> and opened. Digitise it as points: all 51 windows again, with a typical error of <span class="known">0.0005 rad (0.07%)</span>. Without straightening, none of the windows is found: a tilt of under a degree is enough to throw the axes out.</p>
+<pre class="code" data-run="term"><code>trace-digitiser points /data/examples/hearn-whitmore-2026/figure-3c-scanned.jpg -o ~/results/figure-3c-scanned
+compare-known ~/results/figure-3c-scanned/figure-3c-scanned_points.csv</code></pre>
+<p>On the command line (and in Python), a tilted figure is straightened by itself when nothing gives pixel positions; the straightened picture is saved beside the results, and its pixels are the ones in the table.</p>
+</article>
+<article class="help-page" id="h-walk-1b" data-title="Bars, and a scan: Figure 1b" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="bars bar chart error bars negative baseline scan scanned straighten tilt" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="9"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg>Bars, and a scan: Figure 1b</h1>
+<p class="lede">Twelve bars, one for each month: how many fewer births there were from 1975 on than in 1955–1974, in per cent. They hang down from zero, and each has an error bar of one bootstrap standard error.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-1b.png" alt="Figure 1b" width="260">
+<h2>Digitise it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b.png">Open Figure 1b</button> <button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b.png" data-dg-run>Open and digitise</button></div>
+<p>The kind is <b>Bars</b>. Digitise: the 12 bars are found, each from its baseline – the zero line, read from the y axis – to its end, with a typical error of <span class="known">0.05 percentage points (0.2% of the axis)</span>. Each error bar reaches <span class="known">1.35</span> either side: the notebook drew one bootstrap standard error from 1000 unseeded samples, so this figure is the only record of its value.</p>
+<p>Two things in the <b>Check</b> list: the x axis is not calibrated – its labels are month names, not numbers, so each bar has its <code>x_pixel</code> and its place (<code>bar</code>) but no <code>x_value</code> – and a patch of the bar colour that doesn't reach the baseline was left out: the legend's.</p>
+<h2>The scanned copy</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1b-scanned.jpg">Open the scanned copy</button></div>
+<p>It is tilted 1.2°. <b>Straighten it</b>, then digitise as bars: the same 12 bars, typical error <span class="known">0.05 points (0.18%)</span>, error bars 1.35. Not straightened, only 9 bars are found, with errors of 15 points or more – one more reason to straighten every scan.</p>
+<pre class="code" data-run="term"><code>trace-digitiser bars /data/examples/hearn-whitmore-2026/figure-1b-scanned.jpg -o ~/results/figure-1b-scanned --overlay
+compare-known ~/results/figure-1b-scanned/figure-1b-scanned_bars.csv</code></pre>
+</article>
+<article class="help-page" id="h-walk-3a" data-title="Two panels, one x axis: Figure 3a" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="lines line plot spectrum panels stacked shared axis ticks x_ref reference points multi-panel" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg>Two panels, one x axis: Figure 3a</h1>
+<p class="lede">Two spectra, one above the other: the upper for 1955–1974, the lower for 1976–2014. Only the lower panel has numbers on its x axis; the upper one shares it.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3a.png" alt="Figure 3a" width="300">
+<h2>Digitise it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3a.png" data-dg-run>Open and digitise as lines</button></div>
+<p>Both panels are found, and both lines read: the comparison gives a typical error of <span class="known">0.0008 (0.3% of the axis)</span> for each. The <b>Check</b> list says what was done about the upper panel's x axis: it has no labels that could be read, so it was given the x scale of the lower panel, which has the same left and right edges. The worst errors, about 0.07, are at the sharpest peaks, which are thinner than the line drawn through them.</p>
+<p>A line's table has a row for each column of pixels: <code>x_value</code> and <code>center_estimate</code> (the middle of the line there), with <code>upper_envelope</code> and <code>lower_envelope</code> (its edges) and <code>interpolated</code> (no line in that column, so the value is between its neighbours').</p>
+<h2>Setting the x axis yourself</h2>
+<p>When the labels can't be read, you tell trace-digitiser what two ticks stand for. Choose the <b>Tick</b> tool and click just below the lower panel's x axis, on the tick of <i>2</i>: the click snaps to the tick mark (the loupe at the top right shows exactly where), and a box asks for its value. Type <kbd>2</kbd>. Do the same for <i>20</i>. Digitise again: both panels take their x scale from your ticks – those under a panel serve the panels stacked above it too.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"exclude":[],"colours":[],"ticks":[{"axis":"x","px":114,"value":2,"side":"bottom","at":[114,450]},{"axis":"x","px":610.99,"value":20,"side":"bottom","at":[611,450]}]}}' data-dg-run>Mark the two ticks for me, and digitise</button></div>
+<p>The command line can't say which panel a tick belongs to, so with two panels the result gives the Python instead:</p>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+result = td.digitise("/data/examples/hearn-whitmore-2026/figure-3a.png",
+                     x_ref={1: [(114, 2), (611, 20)], 2: [(114, 2), (611, 20)]}, write_outputs=False)
+result.trace_data.groupby("panel_id").x_value.agg(["min", "max"])</code></pre>
+</article>
+<article class="help-page" id="h-walk-1a" data-title="Two y axes and an inset: Figure 1a" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="lines colours second axis right-hand twin axis inset legend exclude leave out ticks words months plot area" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg>Two y axes and an inset: Figure 1a</h1>
+<p class="lede">The births in each month from 1955 to 2014 (blue, against the left-hand axis), the month in which births were conceived at their peak (orange, against the right-hand axis, which is labelled with month names), and an inset of 1972–1978 with its own axes (green). Two legends sit inside the plot. Each line needs a run of its own, with the right marks.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-1a.png" alt="Figure 1a" width="100%">
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png">Open Figure 1a</button></div>
+<p>Once it has looked, the side panel lists one plot area: its y axis (45000 … 80000) and x axis (1955 … 2015) read with high confidence, and its colours – orange, blue and black. The right-hand axis's 8 labels were found but not read as numbers: they are words.</p>
+
+<h2>1 · The blue line: one colour, and two things to leave out</h2>
+<ol class="steps">
+<li>With the <b>Colour</b> tool, click on the blue line (or click the blue chip under <i>Colours</i>). Only that colour is read now.</li>
+<li>With <b>Leave out</b>, drag a box around the <i>Births</i> legend at the top left – its blue sample would be read as part of the line – and another around the whole inset, with its labels.</li>
+<li>Digitise as lines.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"ticks":[],"colours":["#4682b4"],"exclude":[[120,15,262,58],[455,12,882,218]]}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p>Typical error: <span class="known">about 500 births (1.4% of the axis)</span>. That is more than for the other figures, and not a fault of the reading: 720 months are drawn across about 1190 columns of pixels, so the line zigzags within a column, and its middle is not any one month's value. Under the inset (left out), the line is hidden and interpolated: the worst errors are there.</p>
+
+<h2>2 · The orange line: a second y axis, labelled with words</h2>
+<p>Its labels are months, so they can't give a scale; you give it with two ticks. Months are numbers here: June is 6 and January (of the next year) 13.</p>
+<ol class="steps">
+<li>Take out the marks of step 1 (<b>Take them all out</b>). Pick the orange line's colour, and leave out the <i>Peak Conception Month</i> legend at the top right.</li>
+<li>With <b>Tick</b>, click on the right-hand axis at the height of <i>June</i>, the lowest label: it snaps to the label's row. Type <kbd>6</kbd>. Then click at <i>January</i>, the highest, and type <kbd>13</kbd>.</li>
+<li>Digitise as lines. Ticks on the right-hand axis set the y scale for this run.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"colours":["#ff8c00"],"exclude":[[990,15,1296,58]],"ticks":[{"axis":"y","px":485.5,"value":6,"side":"right","at":[1310,485]},{"axis":"y","px":34.5,"value":13,"side":"right","at":[1310,35]}]}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p>Typical error: <span class="known">0.05 months (0.7%)</span>. A right-hand axis with <i>numbers</i> on it needs no ticks: choose <b>Axes → Read the values against a second y axis on the right</b> (<code>--y-axis right</code>, <code>y_axis="right"</code>).</p>
+
+<h2>3 · The green line: an inset is a plot of its own</h2>
+<ol class="steps">
+<li>Take out the marks again, and pick the green line's colour.</li>
+<li>With <b>Plot area</b>, drag a box over the inset's own axes – from its y-axis line to its right edge, and from its top to its x-axis line. Leave out the inset's legend.</li>
+<li>Press <b>Look again</b>: with your plot area, trace-digitiser finds the inset's tick marks (its labels are too small, or slanted, to read).</li>
+<li>With <b>Tick</b>, click under the inset's x axis on the first tick (<kbd>1972</kbd>) and the last (<kbd>1979</kbd>), and beside its y axis on <kbd>60000</kbd> and <kbd>50000</kbd>.</li>
+<li>Digitise as lines.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[[543,20,876,159]],"colours":["#228b22"],"exclude":[[606,26,868,68]],"ticks":[{"axis":"x","px":558,"value":1972,"side":"bottom","at":[558,165]},{"axis":"x","px":865,"value":1979,"side":"bottom","at":[865,165]},{"axis":"y","px":62,"value":60000,"side":"left","at":[540,62]},{"axis":"y","px":118,"value":50000,"side":"left","at":[540,118]}]}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p>Typical error: <span class="known">about 220 births (0.9%)</span>. The three runs are three commands – the result shows each:</p>
+<pre class="code" data-run="term"><code>EX=/data/examples/hearn-whitmore-2026
+trace-digitiser $EX/figure-1a.png --trace-colour '#4682b4' --exclude 120,15,262,58 --exclude 455,12,882,218 -o ~/results/1a-blue
+trace-digitiser $EX/figure-1a.png --trace-colour '#ff8c00' --exclude 990,15,1296,58 --y-ref 485.5:6 --y-ref 34.5:13 -o ~/results/1a-orange
+trace-digitiser $EX/figure-1a.png --trace-colour '#228b22' --plot-area 543,20,876,159 --exclude 606,26,868,68 --x-ref 558:1972 --x-ref 865:1979 --y-ref 62:60000 --y-ref 118:50000 -o ~/results/1a-green
+compare-known --example figure-1a ~/results/1a-orange/figure-1a_automated_digitised_trace_by_column.csv</code></pre>
+<p>A colour in a command is put in quotes: an unquoted <code>#</code> starts a comment in the shell.</p>
+</article>
+<article class="help-page" id="h-walk-s3" data-title="Panels side by side: Supplementary Figure 3" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="points series panels side by side legend dashed overlapping markers colours correlation" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><circle cx="9" cy="14" r="1.6"/><circle cx="13" cy="9" r="1.6"/><circle cx="17" cy="12" r="1.6"/><circle cx="16" cy="6" r="1.6"/></svg>Panels side by side: Supplementary Figure 3</h1>
+<p class="lede">Two panels (1953–1974 and 1976–2014), each with two lines of dots – light (yellow) and temperature (blue-green): the correlation of each with the birth rate at lags of −24 to +24 months. Dashed blue lines mark the significance thresholds, and the legend is outside the panels.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-s3.png" alt="Supplementary Figure 3" width="100%">
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-s3.png" data-dg-run>Open and digitise as points</button></div>
+<p>Both panels are found and both series read: <span class="known">96 of 96 points</span>, typical error <span class="known">0.0003 (0.07% of the axis)</span>. Each point's <code>series</code> and <code>colour</code> say which line it belongs to; <code>panel_id</code> which panel. The right-hand panel has no y labels of its own: it is given the left one's scale, as they share their top and bottom.</p>
+<p>Two places in each panel have two markers drawn over each other. The <b>Check</b> list says so – they were separated by their size – and the overlay is where to look: zoom in on them.</p>
+<p>To read one series only, pick its colour (the chips under <i>Colours</i>, or the <b>Colour</b> tool) before you digitise. The dashed lines are not points: they hold no markers.</p>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+pts = td.digitise_points("/data/examples/hearn-whitmore-2026/figure-s3.png", write_outputs=False).data
+pts.pivot_table(index="x_value", columns=["panel_id", "colour"], values="y_value").round(3).head()</code></pre>
+</article>
+<article class="help-page" id="h-walk-2" data-title="A birthogram: Figure 2" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="rows actogram double plotted birthogram stacked bins dots fill row values spacing" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 5h18M3 11h18M3 17h18"/><path d="M5 5v2.5h4V5M12 11v3h5v-3M6 17v2h3v-2M14 17v3h4v-3"/></svg>A birthogram: Figure 2</h1>
+<p class="lede">A row for each year from 1955 (top) to 2013, double-plotted like an actogram: each row shows its own year's twelve months and then the next year's. In each month, a filled step hangs down from the row's line, as deep as that month's births were high (0 for the year's fewest, 1 for its most). A black dot marks the month in which births were conceived at their peak.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-2.png" alt="Figure 2" width="220">
+<h2>What trace-digitiser needs to know</h2>
+<ul>
+<li><b>Where each row's line is.</b> The y axis is labelled with every year, so <b>Row values</b> <kbd>1955:2013</kbd> says that the rows' lines are at the y values 1955, 1956 … 2013 – placed by the axis's scale. (Other ways: <i>Row positions</i> in pixels, or ticks.)</li>
+<li><b>Bins.</b> Two years of twelve months: <kbd>24</kbd>. Each row's height is then the middle of its fill in each bin; without bins, every column of pixels gets a value.</li>
+<li><b>Row spacing value.</b> The paper drew each row 1.1 units apart, with its fill at most 1 – so <kbd>1.1</kbd> gives heights in the figure's own units (0 to 1).</li>
+<li><b>Dots</b>: <kbd>black</kbd>, to find the dots and say which bin each is in.</li>
+</ul>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-2.png" data-dg-set='{"kind":"rows","marks":{"areas":[],"exclude":[],"ticks":[],"colours":[]},"options":{"row_values":"1955:2013","bins":"24","dots":"black","row_spacing_value":"1.1"}}' data-dg-run>Fill these in for me, and digitise</button></div>
+<p>Reading 59 tick labels takes a few seconds. Then: <span class="known">59 rows × 24 months</span>, typical error <span class="known">0.017 – 1.7% of a row</span> (a row's fill is only some 25 pixels deep, so a pixel is 4% of it), and the dots in <span class="known">all 1416 months</span> agree with the data. The fill direction (it hangs <i>down</i>) is found by itself.</p>
+<p>The <a href="#h-notebook">third starter notebook</a> uses this table: the month with most births, year by year, moves in the mid-1970s – which is what the paper is about.</p>
+<pre class="code" data-run="term"><code>trace-digitiser rows /data/examples/hearn-whitmore-2026/figure-2.png --row-values 1955:2013 --bins 24 --dots black --row-spacing-value 1.1 -o ~/results/figure-2
+compare-known ~/results/figure-2/figure-2_rows.csv</code></pre>
+</article>
+<article class="help-page" id="h-walk-4" data-title="Six heat maps: Figure 4" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="heat map heatmap colour bar colorbar viridis cells rows columns grid" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="3.5" y="3.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="15.5" y="9.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="9.5" y="15.5" width="5" height="5" fill="currentColor" stroke="none"/></svg>Six heat maps: Figure 4</h1>
+<p class="lede">Six heat maps in two rows: the correlation of light, photoperiod and temperature with the birth rate, at lags of −20 to 0 months (down) and for each 60-month window (across), raw above and deseasoned below. One colour bar, from −1 (dark purple) to 1 (yellow), serves them all.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-4.png" alt="Figure 4" width="100%">
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-4.png">Open Figure 4</button></div>
+<p>It finds six plot areas – one of them by its frame alone, because the dark colours beside it hide its axis lines – and the colour bar. A heat map's value is read from its colour: each colour is looked up on the colour bar, whose scale is read from its labels like an axis's.</p>
+<p>Each map has 21 rows (lags −20 … 0). Its 685 columns are narrower than a pixel, so they can't be told apart: each column of pixels is read as it is. So give <b>Rows</b> <kbd>21</kbd> and leave <b>Columns</b> empty.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-4.png" data-dg-set='{"kind":"heatmap","marks":{"areas":[],"exclude":[],"ticks":[],"colours":[],"colourbar":null},"options":{"rows":"21"}}' data-dg-run>Fill it in for me, and digitise</button></div>
+<p>Typical errors from <span class="known">0.009 to 0.017 (0.5–0.9% of the colour bar)</span>, over 48,000 cells. Move the mouse over a map: the status bar gives the value of the cell under it. The <b>Check</b> list says the colour bar's scale was read with medium confidence – check its values (1, 0.75 … −1) against the figure; if they were wrong, you would give its ends as <b>Colour bar ends</b> <kbd>-1,1</kbd>.</p>
+<p>The x axes are labelled with dates (<i>1957-12</i>), which are not numbers. For values in years, mark two of their ticks with decimal years: December 1957 is 1957.96, December 2014 is 2014.96.</p>
+<pre class="code" data-run="term"><code>trace-digitiser heatmap /data/examples/hearn-whitmore-2026/figure-4.png --rows 21 -o ~/results/figure-4
+compare-known ~/results/figure-4/figure-4_heatmap.csv</code></pre>
+</article>
+<article class="help-page" id="h-walk-3b" data-title="A polar plot, put right by hand: Figure 3b" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="polar circular angle phase radius rings centre edit points manual add remove overlapping" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 3v18M3 12h18"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/></svg>A polar plot, put right by hand: Figure 3b</h1>
+<p class="lede">A dot for each year from 1955 to 2014: its angle is the phase of that year's peak of births, and it lies further out each year – the rings are labelled 1955 (innermost) to 2005. The dots are joined by a line, and where the phase moved little they crowd together.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3b.png" alt="Figure 3b" width="280">
+<h2>1 · The radial scale</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3b.png">Open Figure 3b</button></div>
+<p>The kind is <b>Polar</b>. trace-digitiser finds the centre and the rings itself (drawn in blue). Their labels are years, so tell it two: choose the <b>Ring</b> tool, click on the innermost ring (it snaps to it) and type <kbd>1955</kbd>, then on the outermost labelled ring, <kbd>2005</kbd>. A dot's distance from the centre is then its year. Pick the blue of the dots with <b>Colour</b>.</p>
+<h2>2 · Digitise</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3b.png" data-dg-set='{"kind":"polar","marks":{"colours":["#1f77b4"],"rings":[{"r":5,"value":1955},{"r":250,"value":2005}],"centre":null}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p><span class="known">50 of the 60 years</span> are found, with a typical error of <span class="known">0.13°</span> in their angle; and 15 other points, where dots crowd onto each other and onto the line. Angles are measured as matplotlib draws them: 0 to the right, anticlockwise (change it under the kind's options for a plot drawn like a clock).</p>
+<h2>3 · Put it right by hand</h2>
+<p>This is what the <b>Edit points</b> tool is for. Zoom in where the dots crowd (the mouse wheel), then:</p>
+<ul>
+<li>click a pink circle that is not on a dot of its own – on the line between two, or a second circle on one dot – to take it out (it is crossed in red; click again to put it back);</li>
+<li>click on a dot that has no pink circle to put a point there (a blue cross).</li>
+</ul>
+<p>The status bar gives the angle and year under the mouse. Then <b>Save the edited table</b>: it is written beside the first as <code>figure-3b_polar_edited.csv</code>, with the values of the points you added worked out from the same scale, and an <code>edited</code> column that says which they were. The comparison runs again on it: with every dot found once and nothing else, all 60 years are there.</p>
+<pre class="code" data-run="term"><code>compare-known ~/results/figure-3b/figure-3b_polar_edited.csv</code></pre>
+</article>
+<article class="help-page" id="h-walk-pdf" data-title="A figure in a PDF" data-group="Walkthroughs: the examples" data-group-page="h-walks" data-keys="pdf paper page scan scanned crop straighten resolution dpi old paper journal" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 16v-4h1.2a1.2 1.2 0 0 1 0 2.4H8.5M13 16v-4h.8a2 2 0 0 1 0 4zM16.5 16v-4h1.8M16.5 14h1.4"/></svg>A figure in a PDF</h1>
+<p class="lede">The figure you want is usually in a PDF of the paper – for an old paper, often a scan, page by page. <code>practice-pages.pdf</code> is two pages laid out as such a scan, with Figures 1b and 3c on them; the second page was put on the scanner askew.</p>
+<ol class="steps">
+<li>Open the PDF. The Digitise tab shows its pages: choose page 2. It is drawn as a picture at the resolution you choose (300 dots per inch suits most papers) and saved as <code>~/pictures/practice-pages-page2.png</code>, which then opens.</li>
+<li>It is tilted 0.7°: <b>Straighten it</b>.</li>
+<li>trace-digitiser finds the figure's plot area on the page by itself. If it doesn't – a page with several figures, say – mark it with <b>Plot area</b>, or use <b>Crop</b> to keep only the figure.</li>
+<li>Digitise as points.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/practice-pages.pdf">Open practice-pages.pdf</button></div>
+<p>The picture's name doesn't say which example it is, so compare it in the Terminal, saying which:</p>
+<pre class="code" data-run="term"><code>compare-known --example figure-3c ~/results/practice-pages-page2-straightened/practice-pages-page2-straightened_points.csv</code></pre>
+<div class="callout info"><div class="co-t"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>A PDF of your own</div><p>Put it among your files (<b>My files → Add files from my computer</b>, or drop it on the Digitise tab), then open it there. PDF.js draws the page in your browser: the PDF goes nowhere. A figure that is a picture inside the PDF (a scan) is drawn at the resolution you choose; one drawn as lines and text (most papers since about 2000) is sharp at any resolution, so choose a high one for a small figure.</p></div>
+</article>
+<article class="help-page" id="h-digitise" data-title="The Digitise tab" data-group="The Digitise tab" data-group-page="h-digitise" data-keys="digitise tab gui point click overview tools side panel status loupe zoom" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1.3"/><circle cx="10" cy="11" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="7" r="1.3"/></svg>The Digitise tab</h1>
+<p class="lede">The picture of a graph in the middle, tools to mark it along the top, and on the right what trace-digitiser sees, the kind of figure and its options, your marks, and the result. Whatever you do here is a run of trace-digitiser with options – the same options you could type in the Terminal or in Python, and the result shows those too.</p>
+<h2>The way through</h2>
+<ol class="steps">
+<li><b>Open</b> a picture or a PDF (<a href="#h-open">Opening pictures and PDFs</a>).</li>
+<li>trace-digitiser <b>looks</b> at it: the plot areas (dashed blue), what it read beside each axis (green where the scale rests on a label, grey where not), the colours drawn. A tilted scan is offered a <b>Straighten</b>.</li>
+<li>Choose <b>what kind of figure</b> it is: lines, points, bars, rows, heat map or polar (<a href="#h-kinds">Kinds of figure</a>).</li>
+<li><b>Digitise</b>. Often that is all: look at what was found, drawn in pink over the picture.</li>
+<li>If something is wrong, <b>mark</b> what it needs – a plot area, regions to leave out, two ticks on an axis, a colour – and digitise again (<a href="#h-marks">Marking the picture</a>).</li>
+<li>Read the <b>Check</b> list, look at the table, and keep the files (<a href="#h-results">What comes out</a>, <a href="#h-checking">Checking a digitisation</a>).</li>
+</ol>
+<h2>Moving around the picture</h2>
+<ul>
+<li>The mouse wheel (or a pinch on a touchpad) zooms where the mouse is, whatever the tool; <kbd>+</kbd>, <kbd>−</kbd> and <kbd>0</kbd> (fit) do too, when the picture has the keyboard.</li>
+<li><b>Move</b> drags the picture. With another tool, hold <kbd>Space</kbd> (or use the middle button) to drag.</li>
+<li>The <b>loupe</b> at the top right shows the pixels under the mouse, eight times bigger, while a marking tool is chosen – with the line a tick would be placed on.</li>
+<li>The <b>status bar</b> gives the pixel under the mouse, the value there (from your ticks, the last result or what was read from the axes), and its colour; over a heat map, the value of the cell.</li>
+<li><b>Show</b> hides or shows what trace-digitiser sees, your marks, and the result.</li>
+</ul>
+<p>The tab keeps your marks for each picture (in this browser), and opens the last picture again when you come back.</p>
+<ul class="help-grouplist">
+<li><a href="#h-open">Opening pictures and PDFs<small>Examples, your files, your computer, the clipboard, PDF pages; straightening and cropping</small></a></li>
+<li><a href="#h-marks">Marking the picture<small>Plot areas, regions to leave out, ticks and their values, colours, a colour bar, centre and rings, points by hand</small></a></li>
+<li><a href="#h-results">What comes out<small>The overlay, the Check list, the table, the files, and the command and Python that do the same</small></a></li>
+<li><a href="#h-checking">Checking a digitisation<small>How to tell whether it is right, and what to do when it isn&#x27;t</small></a></li>
+</ul>
+</article>
+<article class="help-page" id="h-open" data-title="Opening pictures and PDFs" data-group="The Digitise tab" data-group-page="h-digitise" data-keys="open upload paste clipboard drop drag pdf page tiff jpeg png crop straighten tilt rotate screenshot" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H7l-4 9z"/><path d="M3 19l3.5-8H22l-3.5 8z"/></svg>Opening pictures and PDFs</h1>
+<p class="lede"><b>Open</b> shows the examples and the pictures and PDFs among your files. A picture can be PNG, JPEG, GIF, WebP, BMP or TIFF.</p>
+<ul>
+<li><b>From your computer</b>: <b>Open → From my computer…</b>, or drop the file on the picture area. It is copied into <code>~/pictures</code> – kept in this browser, not sent anywhere.</li>
+<li><b>A screenshot</b>: copy it (on Windows <kbd>Win</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>, on a Mac <kbd>Ctrl</kbd>+<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>4</kbd>), click on the picture area and press <kbd>Ctrl</kbd>+<kbd>V</kbd>. It is saved as <code>~/pictures/pasted-….png</code>. A screenshot of a figure on screen is only as sharp as the screen: zoom the PDF in before you take it.</li>
+<li><b>A PDF</b>: choose the page and how sharply to draw it (dots per inch); the page is saved as a picture in <code>~/pictures</code> (<a href="#h-walk-pdf">A figure in a PDF</a>).</li>
+<li>From the <b>Files</b> tab: a picture has a <b>Digitise</b> button; in the <b>Terminal</b>, <code>digitise FILE</code>.</li>
+</ul>
+<h2>Straighten</h2>
+<p>A scan is seldom straight, and a tilt of half a degree is enough to spoil the axes. When trace-digitiser finds a tilt of 0.15° or more, the side panel says so and offers <b>Straighten it</b>: an upright copy is saved beside the picture (or in <code>~/pictures</code>) as <code>NAME-straightened.png</code>, and opened. Mark the upright copy, not the tilted one.</p>
+<h2>Crop</h2>
+<p>The <b>Crop</b> tool keeps the part of the picture inside the box you drag, as a new picture (<code>NAME-cropped.png</code>). Cropping is seldom needed – a plot area or regions to leave out do the same – but a page of a paper with several figures is easier to work with cropped to one of them.</p>
+</article>
+<article class="help-page" id="h-marks" data-title="Marking the picture" data-group="The Digitise tab" data-group-page="h-digitise" data-keys="tools mark plot area exclude leave out tick ticks reference values colour colour picker eyedropper colour bar centre ring edit points snap" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>Marking the picture</h1>
+<p class="lede">Each tool sets one of trace-digitiser's options. The marks are listed under <b>Your marks</b>, where the × beside each takes it out.</p>
+<div class="help-xscroll"><table>
+<tr><th>Tool</th><th>What it says</th><th>The option</th></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="1" stroke-dasharray="3 3"/><path d="M14 14l6 6"/></svg> Plot area</td><td>Where a panel's axes are: drag from the y-axis line to the right-hand edge, and from the top to the x-axis line. One box per panel; the sides snap to the axis lines found. With plot areas marked, only those panels are read.</td><td><code>plot_area</code>, <code>--plot-area L,T,R,B</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/></svg> Leave out</td><td>Something inside a plot that is not data: a legend, a label, an inset, an arrow.</td><td><code>exclude</code>, <code>--exclude L,T,R,B</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg> Tick</td><td>Click on a tick, below the x axis or beside a y axis, and type what it stands for. It snaps to the tick marks (and labels) found within a few pixels; the box offers the number read there, if any. Two ticks on an axis set its scale; more are fitted by least squares.</td><td><code>x_ref</code>, <code>y_ref</code>, <code>--x-ref COLUMN:VALUE</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 22l1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="M15 6l3.4-3.4a2.1 2.1 0 0 1 3 3L18 9l.4.4a2.1 2.1 0 0 1 0 3 2.1 2.1 0 0 1-3 0l-3.8-3.8a2.1 2.1 0 0 1 0-3 2.1 2.1 0 0 1 3 0z"/></svg> Colour</td><td>Click on a line, a point or a bar: only the colours picked are read. It takes the most coloured pixel near the click, not the paper or an edge.</td><td><code>trace_colours</code> / <code>colours</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="3.5" y="3.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="15.5" y="9.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="9.5" y="15.5" width="5" height="5" fill="currentColor" stroke="none"/></svg> Colour bar</td><td>(Heat maps) the coloured strip of the colour bar, if it isn't found.</td><td><code>colourbar</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg> Centre, <svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 3v18M3 12h18"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/></svg> Ring</td><td>(Polar plots) the centre, and rings with the values they stand for – two set the radial scale.</td><td><code>centre</code>, <code>r_ref</code></td></tr>
+<tr><td><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg> Edit points</td><td>(After a run of points or a polar plot) take points out, put points in; then save the edited table.</td><td>–</td></tr>
+</table></div>
+<h2>Ticks, in more detail</h2>
+<ul>
+<li>A tick goes with the plot area beside which you click. Panels stacked on one x axis share the ticks marked under the lowest; panels side by side share the y ticks marked beside the first.</li>
+<li>With several panels, the command line can't say which panel a tick belongs to: the result then gives the Python, which can (<code>x_ref={1: […], 2: […]}</code>).</li>
+<li>A log axis: choose <b>log</b> under <b>Axes</b>, and type the values themselves (10, 1000), not their logarithms.</li>
+<li>Ticks on the right-hand axis set the y scale from that axis – for a line drawn against it (<a href="#h-walk-1a">Figure 1a</a>).</li>
+<li>No ticks at all, and values known at the edges of the plot area? Give them under <b>Axes</b> (<code>y_min</code>, <code>y_max</code> …). Only if the axis ends exactly at those values.</li>
+</ul>
+</article>
+<article class="help-page" id="h-results" data-title="What comes out" data-group="The Digitise tab" data-group-page="h-digitise" data-keys="result output csv table provenance overlay files command line python reproducible download" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg>What comes out</h1>
+<h2>Over the picture</h2>
+<p>What was found is drawn in pink: lines, the circles of points (their error bars in blue), the outlines of bars, the edges of rows' fills, the centres of a heat map's cells (zoom in to see them). The plot areas it used are in green, with the values of the ticks each axis's scale rests on.</p>
+<h2>The Check list</h2>
+<p>Everything trace-digitiser was unsure of: an axis read with less than high confidence (with the labels it rests on, to check), an axis that couldn't be read, a tilt, a line that was missing from many columns, a legend left out, markers that overlapped. Read it every time. <b>What do these mean?</b> asks the AI assistant, if you have set it up.</p>
+<h2>The files</h2>
+<p>In <code>~/results/NAME</code> (change it under <b>Save into</b>):</p>
+<div class="help-xscroll"><table>
+<tr><th>File</th><th>What it holds</th></tr>
+<tr><td><code>NAME_points.csv</code>, <code>_bars</code>, <code>_rows</code>, <code>_heatmap</code>, <code>_polar</code>; for lines <code>NAME_automated_digitised_trace_by_column.csv</code></td><td>The values: one row for each point, bar, cell, row-and-bin, or column of pixels of a line, in pixels and in the axes' units.</td></tr>
+<tr><td><code>…_provenance.json</code></td><td>How it was made: the picture's SHA-256, every option, the versions of trace-digitiser and of what it used, each axis's scale and the labels it rests on, and the Check messages. Keep it with the values.</td></tr>
+<tr><td><code>…_overlay.png</code></td><td>What was found drawn over the figure (with <b>Save a picture of what was found</b>).</td></tr>
+<tr><td>for lines: <code>…_summary_by_label.csv</code>, <code>…_panel_metadata.csv</code></td><td>A summary of each line, and each panel's plot area and scales.</td></tr>
+</table></div>
+<p>Click a file to open it in the Files tab; <b>Download the table</b> saves the CSV to your computer.</p>
+<h2>The same, by hand</h2>
+<p>Under the result are the trace-digitiser command and the Python that do exactly what you did with the mouse. <b>Run in the terminal</b> and <b>Add to notebook</b> try them here; on your own computer, with <code>pip install trace-digitiser</code>, they give the same result. That is the way to digitise many figures alike, and to say in a paper how the values were got.</p>
+</article>
+<article class="help-page" id="h-checking" data-title="Checking a digitisation" data-group="The Digitise tab" data-group-page="h-digitise" data-keys="check checking accuracy wrong fix problems troubleshooting error overlay compare known" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2.4 1.8 3 .2.9 2.8 2.2 2-.9 2.8.9 2.8-2.2 2-.9 2.8-3 .2L12 21l-2.4-1.8-3-.2-.9-2.8-2.2-2 .9-2.8-.9-2.8 2.2-2 .9-2.8 3-.2z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>Checking a digitisation, and putting it right</h1>
+<p class="lede">A digitisation is right when what is drawn in pink lies on what the figure shows, and the scales rest on the right ticks. For the examples, <b>Compare with the known values</b> says how close it is; for your own figures, the overlay is the check.</p>
+<ol class="steps">
+<li><b>The scales.</b> Are the green tick values on the axes the figure's own? A label misread (a 6 for an 8) is usually outvoted by the others; if not, the Check list says the confidence is medium or low – mark two ticks yourself.</li>
+<li><b>The plot areas.</b> Does each green box sit on the axis lines?</li>
+<li><b>What was found.</b> Zoom in along the pink: does it follow the line, sit on each marker, reach the end of each bar?</li>
+<li><b>Spot checks.</b> Put the mouse on a few points: the status bar's value should be what you read off the axes by eye.</li>
+</ol>
+<div class="help-xscroll"><table>
+<tr><th>What you see</th><th>What to do</th></tr>
+<tr><td>A legend, a label or an inset read as data</td><td>Leave it out (<b>Leave out</b>).</td></tr>
+<tr><td>The wrong line, or several where you want one</td><td>Pick its colour (<b>Colour</b>).</td></tr>
+<tr><td>A black or grey line not read (or the axes read as one)</td><td><b>Black or grey lines</b>: always (or never).</td></tr>
+<tr><td>An axis "not calibrated", or read wrongly</td><td>Two ticks and their values (<b>Tick</b>), or the values at the plot's edges (<b>Axes</b>).</td></tr>
+<tr><td>A panel missed, or one too many</td><td>Mark the plot areas (<b>Plot area</b>).</td></tr>
+<tr><td>Points missed or found where there are none</td><td><b>Marker size</b> or <b>Colour tolerance</b>; then <b>Edit points</b>.</td></tr>
+<tr><td>A scan whose values drift across the plot</td><td><b>Straighten it</b> first.</td></tr>
+<tr><td>A line whose values look like steps</td><td>The picture is coarse: a sharper copy (a higher resolution from the PDF).</td></tr>
+</table></div>
+</article>
+<article class="help-page" id="h-kinds" data-title="Kinds of figure" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="kinds readers lines points bars rows heatmap polar choose which" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg>Kinds of figure</h1>
+<p class="lede">trace-digitiser has a reader for each kind of figure. Choose by what the values are drawn as, not by what the figure is about.</p>
+<div class="help-xscroll"><table>
+<tr><th>Kind</th><th>For</th><th>Python · command</th></tr>
+<tr><td><a href="#h-lines">Lines</a></td><td>lines and curves: time courses, spectra, survival curves, traces of recordings</td><td><code>td.digitise</code> · <code>trace-digitiser FIG</code></td></tr>
+<tr><td><a href="#h-points">Points</a></td><td>markers of any shape, with or without error bars: scatter plots, dot plots, forest plots, lines with markers</td><td><code>td.digitise_points</code> · <code>trace-digitiser points FIG</code></td></tr>
+<tr><td><a href="#h-bars">Bars</a></td><td>bar charts, up or across, up from or down from the baseline, with error bars</td><td><code>td.digitise_bars</code> · <code>trace-digitiser bars FIG</code></td></tr>
+<tr><td><a href="#h-rows">Rows</a></td><td>a stack of rows: actograms, double-plotted records, birthograms, raster plots</td><td><code>td.digitise_rows</code> · <code>trace-digitiser rows FIG</code></td></tr>
+<tr><td><a href="#h-heatmap">Heat map</a></td><td>cells coloured on a colour bar (or a known colour map)</td><td><code>td.digitise_heatmap</code> · <code>trace-digitiser heatmap FIG</code></td></tr>
+<tr><td><a href="#h-polar">Polar</a></td><td>points on polar axes: phases, circular data, rose plots' points</td><td><code>td.digitise_polar</code> · <code>trace-digitiser polar FIG</code></td></tr>
+</table></div>
+<p>A figure with lines <i>and</i> markers (a line through its points) can be read either way: as points, if what matters is the points; as lines, for the values between them. Box plots and pie charts have no reader yet: their few values are quickest read with the mouse – the status bar gives the value under it once two ticks are marked.</p>
+<ul class="help-grouplist">
+<li><a href="#h-lines">Lines<small>A value for each column of pixels of each line</small></a></li>
+<li><a href="#h-points">Points<small>Markers of any shape, and their error bars</small></a></li>
+<li><a href="#h-bars">Bars<small>Where each bar ends, and its error bar</small></a></li>
+<li><a href="#h-rows">Rows: actograms and the like<small>A stack of rows, bin by bin, with the dots that mark a peak</small></a></li>
+<li><a href="#h-heatmap">Heat maps<small>Each cell&#x27;s value, from its colour on the colour bar</small></a></li>
+<li><a href="#h-polar">Polar plots<small>The angle of each point, and its distance from the centre</small></a></li>
+</ul>
+</article>
+<article class="help-page" id="h-lines" data-title="Lines" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="lines line trace curve time series envelope interpolated resample achromatic black" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M8 16l4-5 3 3 5-7"/></svg>Lines</h1>
+<p class="lede">For each line in each plot area, a value for every column of pixels: where the middle of the line is in that column. Lines are told apart by their colour.</p>
+<ul>
+<li><b>Colours</b>: without colours picked, every colour drawn in the plot that looks like a line is read, each as a line of its own; black or grey ones only when they look like lines rather than axes and text (<b>Black or grey lines</b> changes that).</li>
+<li><b>The values</b>: <code>center_estimate</code> (the middle), <code>mean_estimate</code> (the mean of the line's pixels), <code>upper_envelope</code> and <code>lower_envelope</code> (its top and bottom). For a line drawn thick, or a dense line that zigzags within a column, the envelope says how much is drawn there.</li>
+<li><b>Gaps</b>: a column with nothing of the line (under a legend, or past its end) is filled in from its neighbours, and <code>interpolated</code> is True there. The Check list says when much of a line is.</li>
+<li><b>Resampling</b>: in Python, <code>result.resample(interval)</code> gives one value per interval of the x axis (a month, an hour) rather than per pixel.</li>
+</ul>
+<p>Walkthroughs: <a href="#h-walk-3a">Figure 3a</a> (two panels), <a href="#h-walk-1a">Figure 1a</a> (three lines, two y axes, an inset).</p>
+</article>
+<article class="help-page" id="h-points" data-title="Points" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="points markers scatter dot plot error bars caps overlapping marker size colour tolerance series" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><circle cx="9" cy="14" r="1.6"/><circle cx="13" cy="9" r="1.6"/><circle cx="17" cy="12" r="1.6"/><circle cx="16" cy="6" r="1.6"/></svg>Points</h1>
+<p class="lede">Every marker – dot, square, triangle, diamond, filled or not – of the colours read, with its position in pixels and in the axes' units, and its error bars.</p>
+<ul>
+<li><b>Series</b>: one per colour. Without colours picked, every colour that holds markers is a series.</li>
+<li><b>Overlapping markers</b> are separated by their size, and the Check list says where; markers cut by a line or a gridline are put together again.</li>
+<li><b>Marker size</b>: found from the markers themselves; give it (the diameter in pixels) when they are tiny or all overlap.</li>
+<li><b>Error bars</b>: <i>auto</i> keeps those found on most of a series' points; or choose up-and-down, across, both or none. Each end is found at the middle of its cap; <code>x_error_capped</code> / <code>y_error_capped</code> say whether there was one.</li>
+<li><b>Colour tolerance</b>: how far (0–441 in RGB) a pixel's colour may be from the colour picked – raise it for a scan, lower it when two series' colours are close.</li>
+</ul>
+<p>Walkthroughs: <a href="#h-walk-3c">Figure 3c</a>, <a href="#h-walk-s3">Supplementary Figure 3</a>.</p>
+</article>
+<article class="help-page" id="h-bars" data-title="Bars" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="bars bar chart histogram baseline horizontal error bars negative grouped" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20h16"/><rect x="6" y="11" width="3" height="9"/><rect x="11" y="6" width="3" height="14"/><rect x="16" y="13" width="3" height="7"/></svg>Bars</h1>
+<p class="lede">Each bar from its baseline to its end – up or down, or across for bars that lie down – with its error bar. The baseline is the axis's 0 when it lies within the plot, or the value you give.</p>
+<ul>
+<li><b>The bars</b> are told apart by colour, as series; a legend's patch is left out because it doesn't reach the baseline.</li>
+<li><b>The table</b>: <code>value</code> (where the bar ends), <code>baseline</code>, <code>x_pixel</code> or <code>y_pixel</code> (its middle), its edges in pixels, and <code>error_low</code>, <code>error_high</code>.</li>
+<li><b>Labels</b>: bars labelled with words (months, groups) have no x values; their order is in <code>bar</code>.</li>
+</ul>
+<p>Walkthrough: <a href="#h-walk-1b">Figure 1b</a>.</p>
+</article>
+<article class="help-page" id="h-rows" data-title="Rows: actograms and the like" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="rows actogram double plotted birthogram raster stacked bins dots fill height chronobiology circadian" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 5h18M3 11h18M3 17h18"/><path d="M5 5v2.5h4V5M12 11v3h5v-3M6 17v2h3v-2M14 17v3h4v-3"/></svg>Rows: actograms and the like</h1>
+<p class="lede">A figure drawn as a stack of rows, each a little plot of its own: actograms (a day per row, activity as black bars), double-plotted records, birthograms. For each row, how high its fill reaches at each column – or in each of a number of bins – as a fraction of the distance between rows.</p>
+<ul>
+<li><b>Where the rows are</b>: their values on the y axis (<b>Row values</b>, <kbd>1955:2013</kbd> or a list), their positions in pixels, or as many evenly spaced rows as you say between two positions; otherwise one row for each tick label read.</li>
+<li><b>Bins</b>: 24 for a day of hours or two years of months, 48 for two days of hours (double-plotted)…</li>
+<li><b>Row spacing value</b>: what the distance between two rows stands for, for heights in the figure's own units.</li>
+<li><b>Fill</b>: up from its line (most actograms) or down (Figure 2) – found by itself. Its colour: the commonest, or the one you pick.</li>
+<li><b>Dots</b>: markers of a colour you name are found and placed in their row and bin (<code>dot</code> in the table).</li>
+</ul>
+<p>Walkthrough: <a href="#h-walk-2">Figure 2</a>.</p>
+</article>
+<article class="help-page" id="h-heatmap" data-title="Heat maps" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="heat map heatmap colour bar colorbar colormap viridis cells grid matrix correlation" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><rect x="3.5" y="3.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="15.5" y="9.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="9.5" y="15.5" width="5" height="5" fill="currentColor" stroke="none"/></svg>Heat maps</h1>
+<p class="lede">Each cell's value, from its colour: the colour is found on the colour bar (in CIELAB, where distance matches what the eye sees), between the bar's two nearest colours. The bar's scale is read from its labels, like an axis's.</p>
+<ul>
+<li><b>The colour bar</b> is found by itself; mark it (<b>Colour bar</b>) if not. Its ends can be given (<b>Colour bar ends</b>, <kbd>-1,1</kbd>) when its labels can't be read.</li>
+<li><b>No colour bar</b>? Name matplotlib's colour map (<kbd>viridis</kbd>, <kbd>magma</kbd>, <kbd>RdBu_r</kbd>…) with its smallest and largest values.</li>
+<li><b>Cells</b>: how many rows and columns are found from the picture; give them when you know them. Cells narrower than a pixel can't be told apart: then each column of pixels is a cell.</li>
+<li><code>colour_error</code> in the table says how far a cell's colour is from the bar; cells far from it (text, gridlines) have no value.</li>
+</ul>
+<p>Walkthrough: <a href="#h-walk-4">Figure 4</a>.</p>
+</article>
+<article class="help-page" id="h-polar" data-title="Polar plots" data-group="Kinds of figure" data-group-page="h-kinds" data-keys="polar circular angle radius phase rings centre clock rose zero clockwise" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 3v18M3 12h18"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/></svg>Polar plots</h1>
+<p class="lede">Each point's angle and its distance from the centre. The centre and the circles are found by themselves; the radial scale comes from rings you mark with their values, or from the value of the outer circle.</p>
+<ul>
+<li><b>Angles</b>: from the right, anticlockwise (matplotlib's way), unless you say 0 is at the top (a clock face) or elsewhere, and that they grow clockwise. <code>angle_degrees</code> and <code>angle_radians</code> in the table.</li>
+<li><b>Distances</b>: <code>radius_px</code> in pixels, <code>r_value</code> in the scale's units – a fraction of the outer circle if no scale is given.</li>
+<li>Points that crowd together are where to <b>Edit points</b> by hand.</li>
+</ul>
+<p>Walkthrough: <a href="#h-walk-3b">Figure 3b</a>.</p>
+</article>
+<article class="help-page" id="h-notebook" data-title="The Notebook tab" data-group="Notebook and terminal" data-group-page="h-notebook" data-keys="notebook jupyter python ipynb cells starter plot pandas matplotlib" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12 8h4M12 12h4"/></svg>The Notebook tab</h1>
+<p class="lede">Jupyter-style notebooks in Python – the same Python as the Digitise tab, with trace-digitiser, pandas, NumPy and Matplotlib. Run a cell with <kbd>Shift</kbd>+<kbd>Enter</kbd>; plots appear under it. Notebooks are <code>.ipynb</code> files: they open in Jupyter on your own computer too.</p>
+<h2>The starter notebooks</h2>
+<p>In <code>~/notebooks</code>, each checked against the known values:</p>
+<div class="tryrow"><button class="do" type="button" data-open-nb="~/notebooks/01-digitise-in-python.ipynb">Digitising in Python</button> <button class="do" type="button" data-open-nb="~/notebooks/02-how-close-is-it.ipynb">How close is it?</button> <button class="do" type="button" data-open-nb="~/notebooks/03-using-the-values.ipynb">Using the values</button></div>
+<ul>
+<li><b>Digitising in Python</b>: lines, points, what trace-digitiser sees, a second y axis, points by hand.</li>
+<li><b>How close is it?</b> Every example, digitised as the walkthroughs do, in a table of errors.</li>
+<li><b>Using the values</b>: Figure 1b worked out again from the picture of Figure 1a's line (within 1.4 points of the paper's), and the shift of the birthogram's peak month, year by year.</li>
+</ul>
+<h2>Good to know</h2>
+<ul>
+<li>A notebook runs in its own folder (usually <code>~/notebooks</code>). Python does not expand <code>~</code> by itself: <code>os.path.expanduser("~/results")</code>.</li>
+<li><code>!trace-digitiser …</code> runs the command in a cell; <code>%pip install NAME</code> adds a pure-Python package.</li>
+<li>Code from the Digitise tab's result (<b>Add to notebook</b>) and from the help's boxes goes into the open notebook as a new cell.</li>
+</ul>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+info = td.describe_figure("/data/examples/hearn-whitmore-2026/figure-s3.png")
+[(p["panel_id"], p["plot_area"], [c["hex"] for c in p["colours"]]) for p in info["panels"]]</code></pre>
+</article>
+<article class="help-page" id="h-python" data-title="trace-digitiser in Python" data-group="Notebook and terminal" data-group-page="h-notebook" data-keys="python api functions digitise digitise_points describe_figure pixels_to_values result warnings options reference" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3c-4 0-4 1.5-4 3v2h4v1H6c-2 0-3 1.5-3 4s1 4 3 4h2v-3a2 2 0 0 1 2-2h4a2 2 0 0 0 2-2V6c0-1.5-1-3-4-3z"/><path d="M12 21c4 0 4-1.5 4-3v-2h-4v-1h6c2 0 3-1.5 3-4s-1-4-3-4h-2v3a2 2 0 0 1-2 2h-4a2 2 0 0 0-2 2v4c0 1.5 1 3 4 3z"/><path d="M10 5.5h.01M14 18.5h.01"/></svg>trace-digitiser in Python</h1>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+result = td.digitise_points("/data/examples/hearn-whitmore-2026/figure-3c.png", output_dir="/home/user/results/py")
+print(result.warnings)
+result.data.head()</code></pre>
+<div class="help-xscroll"><table>
+<tr><th>Function</th><th>Gives</th></tr>
+<tr><td><code>td.digitise(image, …)</code></td><td>lines: <code>result.trace_data</code>, <code>.panels</code>, <code>.warnings</code>, <code>.provenance</code>, <code>.resample(interval)</code>, <code>.overlay()</code>, <code>.plot()</code></td></tr>
+<tr><td><code>td.digitise_points</code>, <code>_bars</code>, <code>_rows</code>, <code>_heatmap</code>, <code>_polar</code></td><td>a <code>FigureResult</code>: <code>.data</code>, <code>.panels</code>, <code>.warnings</code>, <code>.provenance</code>, <code>.csv_path</code>, <code>.overlay()</code></td></tr>
+<tr><td><code>td.describe_figure(image)</code></td><td>what is found: plot areas, tick marks, labels read and the scales they give, colours, a colour bar, polar axes</td></tr>
+<tr><td><code>td.pixels_to_values(points, x_ref=…, y_ref=…)</code></td><td>pixel positions in the axes' units</td></tr>
+<tr><td><code>td.find_polar_axes(rgb)</code></td><td>a polar plot's centre, radius and rings</td></tr>
+</table></div>
+<h2>Options every reader but polar takes</h2>
+<p><code>plot_area</code>, <code>exclude</code> (pixel boxes: left, top, right, bottom), <code>y_ref</code>, <code>x_ref</code> (lists of (pixel, value), or a dict of them by panel number), <code>y_min</code>/<code>y_max</code>, <code>x_min</code>/<code>x_max</code>, <code>y_scale</code>/<code>x_scale</code> (<code>"auto"</code>, <code>"linear"</code>, <code>"log"</code>), <code>y_axis="right"</code>, <code>ocr=False</code>, <code>straighten</code> (<code>"auto"</code>, <code>False</code> or degrees), <code>output_dir</code>, <code>write_outputs=False</code>, <code>save_overlay=True</code>. Then each reader's own: <code>help(td.digitise_rows)</code> lists them.</p>
+<p>The full documentation is trace-digitiser's README, <a href="https://github.com/comparativechrono/trace-digitiser" target="_blank" rel="noopener">on GitHub</a>.</p>
+</article>
+<article class="help-page" id="h-terminal" data-title="The Terminal tab" data-group="Notebook and terminal" data-group-page="h-notebook" data-keys="terminal command line bash shell trace-digitiser compare-known loop batch many figures help man export-session" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17l6-5-6-5M12 19h8"/></svg>The Terminal tab</h1>
+<p class="lede">A bash-like terminal in your browser, with <code>trace-digitiser</code> as a command – the same command as on your own computer after <code>pip install trace-digitiser</code>. <code>help</code> lists what is here; <code>man trace-digitiser</code> gives examples, and <code>trace-digitiser points --help</code> (or bars, rows, heatmap, polar) the options.</p>
+<pre class="code" data-run="term"><code>cd ~/results
+trace-digitiser describe /data/examples/hearn-whitmore-2026/figure-1b.png | head -30
+trace-digitiser bars /data/examples/hearn-whitmore-2026/figure-1b.png -o figure-1b --overlay
+head -4 figure-1b/figure-1b_bars.csv
+compare-known figure-1b/figure-1b_bars.csv</code></pre>
+<h2>Many figures at once</h2>
+<p>A command is easy to repeat – that is its use. Every figure of a folder, in one go:</p>
+<pre class="code" data-run="term"><code>mkdir -p ~/results/all
+for f in /data/examples/hearn-whitmore-2026/figure-3c*; do
+  trace-digitiser points "$f" -o ~/results/all
+done
+ls ~/results/all</code></pre>
+<h2>compare-known</h2>
+<p>Compares a table digitised from one of the examples with the values the figure shows. It knows the example from the file's name; for another name, give it: <code>compare-known --example figure-3c FILE.csv</code>.</p>
+<p><b>Save session</b> above the terminal (or <code>export-session FILE.ipynb</code>) keeps the commands you ran, with what they printed, as a notebook or a script.</p>
+</article>
+<article class="help-page" id="h-own" data-title="On your own computer" data-group="Notebook and terminal" data-group-page="h-notebook" data-keys="install pip own computer local tesseract windows mac linux offline" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>On your own computer</h1>
+<p class="lede">Everything here works on your own computer too, with the same commands and the same Python.</p>
+<pre class="code"><code>pip install trace-digitiser</code></pre>
+<p>It needs Python 3.10 or later. To read axis labels it uses Tesseract, which is installed apart:</p>
+<ul>
+<li><b>Ubuntu, Debian</b>: <code>sudo apt install tesseract-ocr</code></li>
+<li><b>macOS</b> (Homebrew): <code>brew install tesseract</code></li>
+<li><b>Windows</b>: the installer from the University of Mannheim (<a href="https://github.com/UB-Mannheim/tesseract/wiki" target="_blank" rel="noopener">github.com/UB-Mannheim/tesseract</a>); add its folder to the PATH.</li>
+</ul>
+<p>Without Tesseract, everything works except reading the labels: give the axes yourself (<code>--y-ref</code>, <code>--x-ref</code> or the limits). The values found here and there are the same: the workbench runs the same trace-digitiser, and the same Tesseract model, compiled for the browser.</p>
+<p>To take your files home: <b>My files → Download all my files (.zip)</b>, or <b>Download</b> beside a file in the Files tab.</p>
+</article>
+<article class="help-page" id="h-ai" data-title="The AI assistant" data-group="The AI assistant" data-group-page="h-ai" data-keys="ai assistant gemini claude openai key chat agent privacy what is sent" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2 5.5L19.5 10 14 12l-2 5.5L10 12l-5.5-2L10 8.5z"/><path d="M19 17l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>The AI assistant</h1>
+<p class="lede">The AI tab can explain a Check message or an error, suggest options for a difficult figure, and write Python for what you want to do with the values. It is yours: it uses an AI service you choose, with your own key – Google Gemini has a free tier – and it does nothing until you give it one.</p>
+<h2>What it is sent – and what never</h2>
+<p>With each question goes what you tick below the message box:</p>
+<ul>
+<li><b>the Digitise tab's settings</b>: the picture's name and size, the kind of figure, your marks (plot areas, ticks and their values, colours), what trace-digitiser read from the axes, and the last run's command, Check messages and comparison. <b>Never the picture, nor the values read from it.</b></li>
+<li><b>the notebook's code</b> (not its outputs), <b>your last terminal commands</b> with the end of what they printed, and <b>your file names</b> (not what is in them).</li>
+</ul>
+<p>⋯ → <b>Copy a prompt for another AI tool</b> shows exactly what would be sent.</p>
+<h2>Chat and Agent</h2>
+<p><b>Chat</b> answers questions; code in its answers goes into a notebook or the terminal with a click. <b>Agent</b> carries out a task – <i>digitise this figure as points and plot the result</i> – by running commands in the terminal, one at a time, in a folder of its own; you see every command and its output. It never sees a picture either: only what the programs print.</p>
+<div class="callout warn"><div class="co-t"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>Check what it tells you</div><p>AI models make mistakes, and sound just as sure when they do – they invent options that don't exist. Run what it gives you and look at the result: the overlay, and for the examples the comparison.</p></div>
+<div class="tryrow"><button class="do" type="button" data-bench="assistant">Open the AI tab</button></div>
+</article>
+<article class="help-page" id="h-files" data-title="Your files" data-group="Reference" data-group-page="h-files" data-keys="files storage browser download zip upload folders pictures results notebooks kept persistent" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H7l-4 9z"/><path d="M3 19l3.5-8H22l-3.5 8z"/></svg>Your files</h1>
+<p class="lede">Your home folder (<code>~</code>, which is <code>/home/user</code>) holds <code>pictures</code> (what you open from your computer, pasted pictures, PDF pages, straightened and cropped copies), <code>results</code> (each run's files) and <code>notebooks</code>. The examples are in <code>/data/examples</code>, read-only.</p>
+<h2 data-anchor="kept">Where they are kept</h2>
+<p>In this browser's own storage, on this computer – not on a server. They are there when you come back, in this browser. Clearing the browser's data for the site deletes them, and another browser or computer doesn't see them: download what you want to keep.</p>
+<ul>
+<li><b>My files → Download all my files (.zip)</b>, or <b>Download</b> beside a file or folder in the Files tab (or <code>download FILE</code> in the terminal).</li>
+<li><b>My files → Add files from my computer</b>, or drop files on the Files tab or the Digitise tab.</li>
+<li><b>My files → Start afresh</b> deletes everything.</li>
+</ul>
+<p>The Files tab shows pictures and tables, edits text files (Python scripts, JSON), and has a <b>Digitise</b> button on pictures and PDFs, and <b>Compare with the known values</b> on tables digitised from the examples.</p>
+<div class="tryrow"><button class="do" type="button" data-bench="editor">Open the Files tab</button></div>
+</article>
+<article class="help-page" id="h-versions" data-title="Versions, and how to cite" data-group="Reference" data-group-page="h-files" data-keys="versions cite citation reference trace-digitiser pyodide tesseract paper" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>Versions, and how to cite</h1>
+<table>
+<tr><th>What</th><th>Version</th><th>Where it comes from</th></tr>
+<tr><td>trace-digitiser</td><td>2.1.0</td><td><a href="https://github.com/comparativechrono/trace-digitiser/tree/workbench-features (commit d02c5e6, not yet released)" target="_blank" rel="noopener">github.com/comparativechrono/trace-digitiser/tree/workbench-features</a> (commit d02c5e6, not yet released)</td></tr>
+<tr><td>dwb (the workbench's own glue)</td><td>1.0.0</td><td>python/dwb in this site's repository</td></tr>
+<tr><td>Python (Pyodide), with NumPy, OpenCV, pandas, Pillow and Matplotlib</td><td>Pyodide 0.29.5</td><td>cdn.jsdelivr.net (Pyodide's own builds); the versions of the packages are in the Terminal: <code>pip list</code></td></tr>
+<tr><td>Tesseract (OCR), compiled to WebAssembly</td><td>5.1.0 (tesseract.js-core 6.1.2), with the English model of tessdata_fast 4.1.0</td><td>assets/vendor/tesseract in this site</td></tr>
+</table>
+<p>Each run's provenance file records the versions it used.</p>
+<h2>How to cite</h2>
+<p>When you use values digitised here, say which figure of which paper they come from, that they were digitised with trace-digitiser (and its version), and keep the provenance files. The examples are from:</p>
+<blockquote><p>Hearn TJ, Whitmore D (2026). An abrupt mid-1970s shift in UK birth seasonality and its implications for chronobiological studies. <i>Journal of Biological Rhythms</i> 41(1): 28–41. <a href="https://doi.org/10.1177/07487304251384348" target="_blank" rel="noopener">doi:10.1177/07487304251384348</a></p></blockquote>
+<p>trace-digitiser: <a href="https://github.com/comparativechrono/trace-digitiser" target="_blank" rel="noopener">github.com/comparativechrono/trace-digitiser</a>, <a href="https://pypi.org/project/trace-digitiser/" target="_blank" rel="noopener">pypi.org/project/trace-digitiser</a>.</p>
+</article>
+<article class="help-page" id="h-trouble" data-title="When something goes wrong" data-group="Reference" data-group-page="h-files" data-keys="troubleshoot problem slow python start fail memory reload browser error" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>When something goes wrong</h1>
+<dl>
+<dt>Python doesn't start</dt><dd>The first time, it downloads about 30 MB (from cdn.jsdelivr.net): check the connection, and that nothing blocks that site. Reload the page to try again. A current Chrome, Edge, Firefox or Safari is needed.</dd>
+<dt>It is slow</dt><dd>The first look at a figure imports trace-digitiser (a few seconds). Figures with many tick labels (Figure 2's 59) take longer: Tesseract reads each label several ways. Very large pictures are slow – crop them to the figure.</dd>
+<dt>"Tesseract …" in a message, or no axis read at all</dt><dd>The status bar of the Digitise tab says whether Tesseract loaded. If not, reload; meanwhile, give the axes with ticks.</dd>
+<dt>The page forgot my files</dt><dd>They are kept in this browser: another browser, a private window or cleared site data doesn't have them. Download what you want to keep.</dd>
+<dt>The workbench is open twice</dt><dd>Two tabs share one storage and can overwrite each other's files: use one.</dd>
+<dt>Something else</dt><dd>Restart Python (the Notebook tab's restart button) or reload the page. The AI tab can help you read an error message.</dd>
+</dl>
+</article>
+<article class="help-page" id="h-credits" data-title="Credits" data-group="Reference" data-group-page="h-files" data-keys="credits licences licenses third party pyodide tesseract pdfjs codemirror open source" hidden>
+<h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>Credits</h1>
+<p>The workbench is our own (MIT licence), built on the same framework as our other workbenches. It stands on:</p>
+<ul>
+<li><b>Pyodide</b> – Python in the browser (Mozilla Public License 2.0), with NumPy, OpenCV, pandas, Pillow, Matplotlib and SciPy as Pyodide builds them;</li>
+<li><b>Tesseract</b> (Apache 2.0), compiled to WebAssembly by the <b>tesseract.js-core</b> project (Apache 2.0), with Tesseract's English model from <b>tessdata_fast</b> (Apache 2.0);</li>
+<li><b>PDF.js</b> (Apache 2.0) and its fonts and decoders;</li>
+<li><b>CodeMirror</b> (MIT), <b>marked</b> (MIT), <b>DOMPurify</b> (Apache 2.0 or MPL 2.0) and <b>JSZip</b> (MIT).</li>
+</ul>
+<p>THIRD_PARTY.md in the site's repository lists each with its version and licence. The examples' birth data are the Office for National Statistics' figures for England and Wales, which contain public sector information licensed under the Open Government Licence v3.0.</p>
+</article>
+      </div>
+    </aside>
+
+    <div class="splitter" role="separator" aria-orientation="vertical" title="Drag to resize, or double-click to reset"></div>
+
+    <section class="bench" aria-label="Workbench">
+      <div class="wb-tabs" role="tablist">
+        <button class="wb-tab rail-btn" type="button" id="helpRail" title="Show the help (Ctrl+\)" hidden><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M13 10l2 2-2 2"/></svg><span>Help</span></button>
+        <button class="wb-tab on" type="button" role="tab" data-wb="digitise" title="Digitise: a picture of a graph, and the mouse"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 20V4M4 20h16"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1.3"/><circle cx="10" cy="11" r="1.3"/><circle cx="13" cy="13" r="1.3"/><circle cx="17" cy="7" r="1.3"/></svg><span class="lbl">Digitise</span><span class="dot"></span></button>
+        <button class="wb-tab" type="button" role="tab" data-wb="editor" title="Files"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1H7l-4 9z"/><path d="M3 19l3.5-8H22l-3.5 8z"/></svg><span class="lbl">Files</span><span class="dot"></span></button>
+        <button class="wb-tab" type="button" role="tab" data-wb="notebook" title="Notebook: Python, with trace-digitiser"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v18M12 8h4M12 12h4"/></svg><span class="lbl">Notebook</span><span class="dot"></span></button>
+        <button class="wb-tab" type="button" role="tab" data-wb="terminal" title="Terminal: trace-digitiser as a command"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 17l6-5-6-5M12 19h8"/></svg><span class="lbl">Terminal</span><span class="dot"></span></button>
+        <button class="wb-tab" type="button" role="tab" data-wb="assistant" title="AI assistant (yours: it needs your own key, and never sees your pictures)"><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l2 5.5L19.5 10 14 12l-2 5.5L10 12l-5.5-2L10 8.5z"/><path d="M19 17l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><span class="lbl">AI</span><span class="dot"></span></button>
+      </div>
+      <div class="wb-body">
+        <div class="wb-pane" data-wb="digitise"><div id="dgRoot"></div></div>
+        <div class="wb-pane" data-wb="editor" hidden><div id="edRoot"></div></div>
+        <div class="wb-pane" data-wb="notebook" hidden><div id="nbRoot"></div></div>
+        <div class="wb-pane" data-wb="terminal" hidden><div id="termRoot"></div></div>
+        <div class="wb-pane" data-wb="assistant" hidden><div id="aiRoot"></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<noscript><p style="padding:20px">This page needs JavaScript.</p></noscript>
+
+<script>window.WB_EXAMPLES = [{"p":"hearn-whitmore-2026/README.md","s":8756},{"p":"hearn-whitmore-2026/figure-1a.known.csv","s":25810},{"p":"hearn-whitmore-2026/figure-1a.png","s":182972},{"p":"hearn-whitmore-2026/figure-1b-scanned-straightened.png","s":288047},{"p":"hearn-whitmore-2026/figure-1b-scanned.jpg","s":39045},{"p":"hearn-whitmore-2026/figure-1b.known.csv","s":212},{"p":"hearn-whitmore-2026/figure-1b.png","s":27508},{"p":"hearn-whitmore-2026/figure-2.known.csv","s":50221},{"p":"hearn-whitmore-2026/figure-2.png","s":192521},{"p":"hearn-whitmore-2026/figure-3a.known.csv","s":8388},{"p":"hearn-whitmore-2026/figure-3a.png","s":53451},{"p":"hearn-whitmore-2026/figure-3b.known.csv","s":1893},{"p":"hearn-whitmore-2026/figure-3b.png","s":132291},{"p":"hearn-whitmore-2026/figure-3c-scanned-straightened.png","s":422709},{"p":"hearn-whitmore-2026/figure-3c-scanned.jpg","s":57982},{"p":"hearn-whitmore-2026/figure-3c.known.csv","s":1954},{"p":"hearn-whitmore-2026/figure-3c.png","s":61566},{"p":"hearn-whitmore-2026/figure-4.known.csv","s":648860},{"p":"hearn-whitmore-2026/figure-4.png","s":592488},{"p":"hearn-whitmore-2026/figure-s3.known.csv","s":3613},{"p":"hearn-whitmore-2026/figure-s3.png","s":48076},{"p":"hearn-whitmore-2026/practice-pages.pdf","s":453933},{"p":"hearn-whitmore-2026/data/births.csv","s":14943},{"p":"hearn-whitmore-2026/data/environmental.csv","s":39477}];
+window.WB_STARTERS = [{"p":"notebooks/01-digitise-in-python.ipynb"},{"p":"notebooks/02-how-close-is-it.ipynb"},{"p":"notebooks/03-using-the-values.ipynb"}];
+window.WB_BUNDLE = {"archive":"digitiser-tools.zip","sha256":"0d715b819bd855918948a2a08758af9399fd3fa8dcf41ca7c821c93b7b174f7b","bytes":186754,"packages":{"trace-digitiser":"2.1.0","dwb":"1.0.0"},"trace_digitiser":{"version":"2.1.0","wheel":"trace_digitiser-2.1.0-py3-none-any.whl","sha256":"d302a666955036a08e5fe3daa816bca6e1035ddfef939edbfe2b3614de457776","from":"https://github.com/comparativechrono/trace-digitiser/tree/workbench-features (commit d02c5e6, not yet released)"}};</script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/core.js"></script>
+<script src="assets/js/icons.js"></script>
+<script src="assets/js/vfs.js"></script>
+<script src="assets/js/shell.js"></script>
+<script src="assets/js/shell-lang.js"></script>
+<script src="assets/js/shell-extra.js"></script>
+<script src="assets/js/shell-text.js"></script>
+<script src="assets/js/shell-wb.js"></script>
+<script src="assets/js/terminal.js"></script>
+<script src="assets/vendor/codemirror/codemirror.js"></script>
+<script src="assets/vendor/codemirror/python.js"></script>
+<script src="assets/vendor/codemirror/yaml.js"></script>
+<script src="assets/vendor/codemirror/shell.js"></script>
+<script src="assets/vendor/codemirror/markdown.js"></script>
+<script src="assets/vendor/codemirror/javascript.js"></script>
+<script src="assets/vendor/codemirror/matchbrackets.js"></script>
+<script src="assets/vendor/codemirror/closebrackets.js"></script>
+<script src="assets/vendor/codemirror/comment.js"></script>
+<script src="assets/vendor/codemirror/searchcursor.js"></script>
+<script src="assets/vendor/dompurify/purify.min.js"></script>
+<script src="assets/vendor/marked/marked.min.js"></script>
+<script src="assets/js/project.js"></script>
+<script src="assets/js/kernels.js"></script>
+<script src="assets/js/notebook.js"></script>
+<script src="assets/js/pysync.js"></script>
+<script src="assets/js/editor.js"></script>
+<script src="assets/js/digitise.js"></script>
+<script src="assets/js/assistant.js"></script>
+<script src="assets/js/page-wb.js"></script>
+<script src="assets/js/workbench.js"></script>
+</body>
+</html>

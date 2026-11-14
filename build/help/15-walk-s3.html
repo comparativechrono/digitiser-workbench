@@ -1,0 +1,11 @@
+<!-- id: h-walk-s3 | title: Panels side by side: Supplementary Figure 3 | group: Walkthroughs: the examples | summary: Two panels, two series of points in each, a legend outside, dashed lines | keys: points series panels side by side legend dashed overlapping markers colours correlation -->
+<h1><!--ICON:scatter-->Panels side by side: Supplementary Figure 3</h1>
+<p class="lede">Two panels (1953–1974 and 1976–2014), each with two lines of dots – light (yellow) and temperature (blue-green): the correlation of each with the birth rate at lags of −24 to +24 months. Dashed blue lines mark the significance thresholds, and the legend is outside the panels.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-s3.png" alt="Supplementary Figure 3" width="100%">
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-s3.png" data-dg-run>Open and digitise as points</button></div>
+<p>Both panels are found and both series read: <span class="known">96 of 96 points</span>, typical error <span class="known">0.0003 (0.07% of the axis)</span>. Each point's <code>series</code> and <code>colour</code> say which line it belongs to; <code>panel_id</code> which panel. The right-hand panel has no y labels of its own: it is given the left one's scale, as they share their top and bottom.</p>
+<p>Two places in each panel have two markers drawn over each other. The <b>Check</b> list says so – they were separated by their size – and the overlay is where to look: zoom in on them.</p>
+<p>To read one series only, pick its colour (the chips under <i>Colours</i>, or the <b>Colour</b> tool) before you digitise. The dashed lines are not points: they hold no markers.</p>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+pts = td.digitise_points("/data/examples/hearn-whitmore-2026/figure-s3.png", write_outputs=False).data
+pts.pivot_table(index="x_value", columns=["panel_id", "colour"], values="y_value").round(3).head()</code></pre>
