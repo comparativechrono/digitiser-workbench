@@ -9,7 +9,7 @@ when copying or redistributing its files.
 
 | Component | Version | Licence | Where | Origin |
 |---|---|---|---|---|
-| trace-digitiser (Timothy J Hearn) | 2.1.0 (not yet released) | MIT | its wheel in `python/vendor`, packed into `assets/py/digitiser-tools.zip` with its `.dist-info` | built from the branch `workbench-features` of [comparativechrono/trace-digitiser](https://github.com/comparativechrono/trace-digitiser); `python/vendor/SOURCES.json` records the commit and the wheel's SHA-256 |
+| trace-digitiser (Timothy J Hearn) | 2.1.0 | MIT | its wheel in `python/vendor`, packed into `assets/py/digitiser-tools.zip` with its `.dist-info` | the wheel released on [PyPI](https://pypi.org/project/trace-digitiser/2.1.0/), unchanged, from [comparativechrono/trace-digitiser](https://github.com/comparativechrono/trace-digitiser); `python/vendor/SOURCES.json` records where it came from and its SHA-256 |
 | dwb, and the stand-in for pytesseract | 1.0.0 | MIT | `python/dwb`, `python/pytesseract`, the same archive | written for the workbench |
 | Tesseract, compiled to WebAssembly by tesseract.js-core | Tesseract 5.1.0 (tesseract.js-core 6.1.2) | Apache License 2.0 | `assets/vendor/tesseract/` (with its `LICENSE` and `README.txt`) | the npm package [tesseract.js-core](https://www.npmjs.com/package/tesseract.js-core), unchanged: its LSTM builds, with and without SIMD |
 | Tesseract's English model (tessdata_fast) | 4.1.0 | Apache License 2.0 | `assets/vendor/tesseract/eng.traineddata` | [tesseract-ocr/tessdata_fast](https://github.com/tesseract-ocr/tessdata_fast), as Ubuntu's package tesseract-ocr-eng 1:4.1.0-2 installs it (its SHA-256 is in the folder's `README.txt`) |
