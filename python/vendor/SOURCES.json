@@ -1,9 +1,9 @@
 {
   "trace-digitiser": {
     "package": "trace_digitiser",
-    "version": "2.1.0",
-    "wheel": "trace_digitiser-2.1.0-py3-none-any.whl",
-    "sha256": "f042be91a66745ec67734c8edfd720bd4307bb84d9e403562278e979f0f0b7d6",
-    "from": "https://pypi.org/project/trace-digitiser/2.1.0/"
+    "version": "2.2.0",
+    "wheel": "trace_digitiser-2.2.0-py3-none-any.whl",
+    "sha256": "e1fbd0158a3fb5b1e273ed682ee3a5f5423346b66e334b6dfb76536592ab0346",
+    "from": "https://github.com/comparativechrono/trace-digitiser/tree/real-figures (commit 2c7f730, not yet released)"
   }
 }
