@@ -1,0 +1,18 @@
+<!-- id: h-terminal | title: The Terminal tab | group: Notebook and terminal | summary: trace-digitiser as a command, and compare-known | keys: terminal command line bash shell trace-digitiser compare-known loop batch many figures help man export-session -->
+<h1><!--ICON:terminal-->The Terminal tab</h1>
+<p class="lede">A bash-like terminal in your browser, with <code>trace-digitiser</code> as a command – the same command as on your own computer after <code>pip install trace-digitiser</code>. <code>help</code> lists what is here; <code>man trace-digitiser</code> gives examples, and <code>trace-digitiser points --help</code> (or bars, rows, heatmap, polar) the options.</p>
+<pre class="code" data-run="term"><code>cd ~/results
+trace-digitiser describe /data/examples/hearn-whitmore-2026/figure-1b.png | head -30
+trace-digitiser bars /data/examples/hearn-whitmore-2026/figure-1b.png -o figure-1b --overlay
+head -4 figure-1b/figure-1b_bars.csv
+compare-known figure-1b/figure-1b_bars.csv</code></pre>
+<h2>Many figures at once</h2>
+<p>A command is easy to repeat – that is its use. Every figure of a folder, in one go:</p>
+<pre class="code" data-run="term"><code>mkdir -p ~/results/all
+for f in /data/examples/hearn-whitmore-2026/figure-3c*; do
+  trace-digitiser points "$f" -o ~/results/all
+done
+ls ~/results/all</code></pre>
+<h2>compare-known</h2>
+<p>Compares a table digitised from one of the examples with the values the figure shows. It knows the example from the file's name; for another name, give it: <code>compare-known --example figure-3c FILE.csv</code>.</p>
+<p><b>Save session</b> above the terminal (or <code>export-session FILE.ipynb</code>) keeps the commands you ran, with what they printed, as a notebook or a script.</p>

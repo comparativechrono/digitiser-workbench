@@ -1,0 +1,13 @@
+<!-- id: h-walk-pdf | title: A figure in a PDF | group: Walkthroughs: the examples | summary: Choose the page, draw it as a picture, straighten, crop, digitise | keys: pdf paper page scan scanned crop straighten resolution dpi old paper journal -->
+<h1><!--ICON:pdf-->A figure in a PDF</h1>
+<p class="lede">The figure you want is usually in a PDF of the paper – for an old paper, often a scan, page by page. <code>practice-pages.pdf</code> is two pages laid out as such a scan, with Figures 1b and 3c on them; the second page was put on the scanner askew.</p>
+<ol class="steps">
+<li>Open the PDF. The Digitise tab shows its pages: choose page 2. It is drawn as a picture at the resolution you choose (300 dots per inch suits most papers) and saved as <code>~/pictures/practice-pages-page2.png</code>, which then opens.</li>
+<li>It is tilted 0.7°: <b>Straighten it</b>.</li>
+<li>trace-digitiser finds the figure's plot area on the page by itself. If it doesn't – a page with several figures, say – mark it with <b>Plot area</b>, or use <b>Crop</b> to keep only the figure.</li>
+<li>Digitise as points.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/practice-pages.pdf">Open practice-pages.pdf</button></div>
+<p>The picture's name doesn't say which example it is, so compare it in the Terminal, saying which:</p>
+<pre class="code" data-run="term"><code>compare-known --example figure-3c ~/results/practice-pages-page2-straightened/practice-pages-page2-straightened_points.csv</code></pre>
+<div class="callout info"><div class="co-t"><!--ICON:info-->A PDF of your own</div><p>Put it among your files (<b>My files → Add files from my computer</b>, or drop it on the Digitise tab), then open it there. PDF.js draws the page in your browser: the PDF goes nowhere. A figure that is a picture inside the PDF (a scan) is drawn at the resolution you choose; one drawn as lines and text (most papers since about 2000) is sharp at any resolution, so choose a high one for a small figure.</p></div>

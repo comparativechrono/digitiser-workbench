@@ -1,0 +1,16 @@
+<!-- id: h-walk-2 | title: A birthogram: Figure 2 | group: Walkthroughs: the examples | summary: A stack of 59 rows of months, double-plotted, with dots – read like an actogram | keys: rows actogram double plotted birthogram stacked bins dots fill row values spacing -->
+<h1><!--ICON:rows-->A birthogram: Figure 2</h1>
+<p class="lede">A row for each year from 1955 (top) to 2013, double-plotted like an actogram: each row shows its own year's twelve months and then the next year's. In each month, a filled step hangs down from the row's line, as deep as that month's births were high (0 for the year's fewest, 1 for its most). A black dot marks the month in which births were conceived at their peak.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-2.png" alt="Figure 2" width="220">
+<h2>What trace-digitiser needs to know</h2>
+<ul>
+<li><b>Where each row's line is.</b> The y axis is labelled with every year, so <b>Row values</b> <kbd>1955:2013</kbd> says that the rows' lines are at the y values 1955, 1956 … 2013 – placed by the axis's scale. (Other ways: <i>Row positions</i> in pixels, or ticks.)</li>
+<li><b>Bins.</b> Two years of twelve months: <kbd>24</kbd>. Each row's height is then the middle of its fill in each bin; without bins, every column of pixels gets a value.</li>
+<li><b>Row spacing value.</b> The paper drew each row 1.1 units apart, with its fill at most 1 – so <kbd>1.1</kbd> gives heights in the figure's own units (0 to 1).</li>
+<li><b>Dots</b>: <kbd>black</kbd>, to find the dots and say which bin each is in.</li>
+</ul>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-2.png" data-dg-set='{"kind":"rows","marks":{"areas":[],"exclude":[],"ticks":[],"colours":[]},"options":{"row_values":"1955:2013","bins":"24","dots":"black","row_spacing_value":"1.1"}}' data-dg-run>Fill these in for me, and digitise</button></div>
+<p>Reading 59 tick labels takes a few seconds. Then: <span class="known">59 rows × 24 months</span>, typical error <span class="known">0.017 – 1.7% of a row</span> (a row's fill is only some 25 pixels deep, so a pixel is 4% of it), and the dots in <span class="known">all 1416 months</span> agree with the data. The fill direction (it hangs <i>down</i>) is found by itself.</p>
+<p>The <a href="#h-notebook">third starter notebook</a> uses this table: the month with most births, year by year, moves in the mid-1970s – which is what the paper is about.</p>
+<pre class="code" data-run="term"><code>trace-digitiser rows /data/examples/hearn-whitmore-2026/figure-2.png --row-values 1955:2013 --bins 24 --dots black --row-spacing-value 1.1 -o ~/results/figure-2
+compare-known ~/results/figure-2/figure-2_rows.csv</code></pre>

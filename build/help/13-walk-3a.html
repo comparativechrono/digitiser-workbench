@@ -1,0 +1,16 @@
+<!-- id: h-walk-3a | title: Two panels, one x axis: Figure 3a | group: Walkthroughs: the examples | summary: Lines in two stacked panels, of which only the lower has x labels; marking ticks | keys: lines line plot spectrum panels stacked shared axis ticks x_ref reference points multi-panel -->
+<h1><!--ICON:chart-->Two panels, one x axis: Figure 3a</h1>
+<p class="lede">Two spectra, one above the other: the upper for 1955–1974, the lower for 1976–2014. Only the lower panel has numbers on its x axis; the upper one shares it.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3a.png" alt="Figure 3a" width="300">
+<h2>Digitise it</h2>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3a.png" data-dg-run>Open and digitise as lines</button></div>
+<p>Both panels are found, and both lines read: the comparison gives a typical error of <span class="known">0.0008 (0.3% of the axis)</span> for each. The <b>Check</b> list says what was done about the upper panel's x axis: it has no labels that could be read, so it was given the x scale of the lower panel, which has the same left and right edges. The worst errors, about 0.07, are at the sharpest peaks, which are thinner than the line drawn through them.</p>
+<p>A line's table has a row for each column of pixels: <code>x_value</code> and <code>center_estimate</code> (the middle of the line there), with <code>upper_envelope</code> and <code>lower_envelope</code> (its edges) and <code>interpolated</code> (no line in that column, so the value is between its neighbours').</p>
+<h2>Setting the x axis yourself</h2>
+<p>When the labels can't be read, you tell trace-digitiser what two ticks stand for. Choose the <b>Tick</b> tool and click just below the lower panel's x axis, on the tick of <i>2</i>: the click snaps to the tick mark (the loupe at the top right shows exactly where), and a box asks for its value. Type <kbd>2</kbd>. Do the same for <i>20</i>. Digitise again: both panels take their x scale from your ticks – those under a panel serve the panels stacked above it too.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"exclude":[],"colours":[],"ticks":[{"axis":"x","px":114,"value":2,"side":"bottom","at":[114,450]},{"axis":"x","px":610.99,"value":20,"side":"bottom","at":[611,450]}]}}' data-dg-run>Mark the two ticks for me, and digitise</button></div>
+<p>The command line can't say which panel a tick belongs to, so with two panels the result gives the Python instead:</p>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+result = td.digitise("/data/examples/hearn-whitmore-2026/figure-3a.png",
+                     x_ref={1: [(114, 2), (611, 20)], 2: [(114, 2), (611, 20)]}, write_outputs=False)
+result.trace_data.groupby("panel_id").x_value.agg(["min", "max"])</code></pre>

@@ -1,0 +1,18 @@
+<!-- id: h-results | title: What comes out | group: The Digitise tab | summary: The overlay, the Check list, the table, the files, and the command and Python that do the same | keys: result output csv table provenance overlay files command line python reproducible download -->
+<h1><!--ICON:table-->What comes out</h1>
+<h2>Over the picture</h2>
+<p>What was found is drawn in pink: lines, the circles of points (their error bars in blue), the outlines of bars, the edges of rows' fills, the centres of a heat map's cells (zoom in to see them). The plot areas it used are in green, with the values of the ticks each axis's scale rests on.</p>
+<h2>The Check list</h2>
+<p>Everything trace-digitiser was unsure of: an axis read with less than high confidence (with the labels it rests on, to check), an axis that couldn't be read, a tilt, a line that was missing from many columns, a legend left out, markers that overlapped. Read it every time. <b>What do these mean?</b> asks the AI assistant, if you have set it up.</p>
+<h2>The files</h2>
+<p>In <code>~/results/NAME</code> (change it under <b>Save into</b>):</p>
+<div class="help-xscroll"><table>
+<tr><th>File</th><th>What it holds</th></tr>
+<tr><td><code>NAME_points.csv</code>, <code>_bars</code>, <code>_rows</code>, <code>_heatmap</code>, <code>_polar</code>; for lines <code>NAME_automated_digitised_trace_by_column.csv</code></td><td>The values: one row for each point, bar, cell, row-and-bin, or column of pixels of a line, in pixels and in the axes' units.</td></tr>
+<tr><td><code>…_provenance.json</code></td><td>How it was made: the picture's SHA-256, every option, the versions of trace-digitiser and of what it used, each axis's scale and the labels it rests on, and the Check messages. Keep it with the values.</td></tr>
+<tr><td><code>…_overlay.png</code></td><td>What was found drawn over the figure (with <b>Save a picture of what was found</b>).</td></tr>
+<tr><td>for lines: <code>…_summary_by_label.csv</code>, <code>…_panel_metadata.csv</code></td><td>A summary of each line, and each panel's plot area and scales.</td></tr>
+</table></div>
+<p>Click a file to open it in the Files tab; <b>Download the table</b> saves the CSV to your computer.</p>
+<h2>The same, by hand</h2>
+<p>Under the result are the trace-digitiser command and the Python that do exactly what you did with the mouse. <b>Run in the terminal</b> and <b>Add to notebook</b> try them here; on your own computer, with <code>pip install trace-digitiser</code>, they give the same result. That is the way to digitise many figures alike, and to say in a paper how the values were got.</p>

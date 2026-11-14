@@ -1,0 +1,12 @@
+<!-- id: h-own | title: On your own computer | group: Notebook and terminal | summary: pip install trace-digitiser, and Tesseract | keys: install pip own computer local tesseract windows mac linux offline -->
+<h1><!--ICON:download-->On your own computer</h1>
+<p class="lede">Everything here works on your own computer too, with the same commands and the same Python.</p>
+<pre class="code"><code>pip install trace-digitiser</code></pre>
+<p>It needs Python 3.10 or later. To read axis labels it uses Tesseract, which is installed apart:</p>
+<ul>
+<li><b>Ubuntu, Debian</b>: <code>sudo apt install tesseract-ocr</code></li>
+<li><b>macOS</b> (Homebrew): <code>brew install tesseract</code></li>
+<li><b>Windows</b>: the installer from the University of Mannheim (<a href="https://github.com/UB-Mannheim/tesseract/wiki" target="_blank" rel="noopener">github.com/UB-Mannheim/tesseract</a>); add its folder to the PATH.</li>
+</ul>
+<p>Without Tesseract, everything works except reading the labels: give the axes yourself (<code>--y-ref</code>, <code>--x-ref</code> or the limits). The values found here and there are the same: the workbench runs the same trace-digitiser, and the same Tesseract model, compiled for the browser.</p>
+<p>To take your files home: <b>My files → Download all my files (.zip)</b>, or <b>Download</b> beside a file in the Files tab.</p>

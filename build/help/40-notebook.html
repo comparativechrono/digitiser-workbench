@@ -1,0 +1,20 @@
+<!-- id: h-notebook | title: The Notebook tab | group: Notebook and terminal | summary: Python notebooks, with trace-digitiser and the starter notebooks | keys: notebook jupyter python ipynb cells starter plot pandas matplotlib -->
+<h1><!--ICON:notebook-->The Notebook tab</h1>
+<p class="lede">Jupyter-style notebooks in Python – the same Python as the Digitise tab, with trace-digitiser, pandas, NumPy and Matplotlib. Run a cell with <kbd>Shift</kbd>+<kbd>Enter</kbd>; plots appear under it. Notebooks are <code>.ipynb</code> files: they open in Jupyter on your own computer too.</p>
+<h2>The starter notebooks</h2>
+<p>In <code>~/notebooks</code>, each checked against the known values:</p>
+<div class="tryrow"><button class="do" type="button" data-open-nb="~/notebooks/01-digitise-in-python.ipynb">Digitising in Python</button> <button class="do" type="button" data-open-nb="~/notebooks/02-how-close-is-it.ipynb">How close is it?</button> <button class="do" type="button" data-open-nb="~/notebooks/03-using-the-values.ipynb">Using the values</button></div>
+<ul>
+<li><b>Digitising in Python</b>: lines, points, what trace-digitiser sees, a second y axis, points by hand.</li>
+<li><b>How close is it?</b> Every example, digitised as the walkthroughs do, in a table of errors.</li>
+<li><b>Using the values</b>: Figure 1b worked out again from the picture of Figure 1a's line (within 1.4 points of the paper's), and the shift of the birthogram's peak month, year by year.</li>
+</ul>
+<h2>Good to know</h2>
+<ul>
+<li>A notebook runs in its own folder (usually <code>~/notebooks</code>). Python does not expand <code>~</code> by itself: <code>os.path.expanduser("~/results")</code>.</li>
+<li><code>!trace-digitiser …</code> runs the command in a cell; <code>%pip install NAME</code> adds a pure-Python package.</li>
+<li>Code from the Digitise tab's result (<b>Add to notebook</b>) and from the help's boxes goes into the open notebook as a new cell.</li>
+</ul>
+<pre class="code" data-run="py"><code>import trace_digitiser as td
+info = td.describe_figure("/data/examples/hearn-whitmore-2026/figure-s3.png")
+[(p["panel_id"], p["plot_area"], [c["hex"] for c in p["colours"]]) for p in info["panels"]]</code></pre>

@@ -1,0 +1,23 @@
+<!-- id: h-walk-3c | title: Points and error bars: Figure 3c | group: Walkthroughs: the examples | summary: Dots with horizontal confidence intervals, an axis that runs downwards – and a scanned copy | keys: points markers dots error bars confidence interval forest plot scan scanned tilted straighten jpeg -->
+<h1><!--ICON:scatter-->Points and error bars: Figure 3c</h1>
+<p class="lede">A forest plot: a blue dot for each ten-year window of births, at the circular standard deviation of its peak phase, with grey 95% confidence intervals. The years run down the y axis. Red asterisks mark windows that differ from 1955–1974, and dashed grey lines mark the ticks.</p>
+<img class="dg-figure" src="data/examples/hearn-whitmore-2026/figure-3c.png" alt="Figure 3c" width="240">
+
+<h2>Digitise it</h2>
+<ol class="steps">
+<li>Open it. Once Python has looked at it, the side panel says the y axis's 6 labels agree (1960 … 2010) and the x axis's 7 (0.1 … 0.7), both with high confidence.</li>
+<li>The kind is <b>Points</b>. <b>Error bars</b> is <i>find them (auto)</i>: it keeps those found on most of a series' points.</li>
+<li>Press <b>Digitise as points</b>.</li>
+</ol>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png">Open Figure 3c</button> <button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c.png" data-dg-run>Open and digitise</button></div>
+<p>All <span class="known">51 windows</span> are found; the comparison gives a typical error of <span class="known">0.0004 rad (0.05% of the axis)</span> for the dots and about the same for the ends of the intervals. The red asterisks are not read as points, because they are another colour that holds no markers; the grey dashed lines don't hide the intervals, which are found to the middle of their caps.</p>
+<p>In the table, <code>x_value</code> is the circular SD and <code>y_value</code> the window's year; <code>x_error_low</code> and <code>x_error_high</code> are the ends of the interval, and <code>x_error_capped</code> says whether a cap was found there.</p>
+<div class="callout info"><div class="co-t"><!--ICON:info-->"The y axis was read as running downwards"</div><p>Most y axes go up. This one goes down, on purpose – and so does an axis of negative numbers whose minus signs were not read. trace-digitiser can't tell the two apart, so it says what it did. Here it is right; if it weren't, you would mark two ticks and their values (the <b>Tick</b> tool).</p></div>
+
+<h2>The scanned copy</h2>
+<p><code>figure-3c-scanned.jpg</code> is the same figure as if printed and scanned: turned by 0.8°, softened, saved as a JPEG.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-3c-scanned.jpg">Open the scanned copy</button></div>
+<p>The side panel says it is tilted 0.80° clockwise, and offers to <b>Straighten it</b>. Do: an upright copy is saved as <code>~/pictures/figure-3c-scanned-straightened.png</code> and opened. Digitise it as points: all 51 windows again, with a typical error of <span class="known">0.0005 rad (0.07%)</span>. Without straightening, none of the windows is found: a tilt of under a degree is enough to throw the axes out.</p>
+<pre class="code" data-run="term"><code>trace-digitiser points /data/examples/hearn-whitmore-2026/figure-3c-scanned.jpg -o ~/results/figure-3c-scanned
+compare-known ~/results/figure-3c-scanned/figure-3c-scanned_points.csv</code></pre>
+<p>On the command line (and in Python), a tilted figure is straightened by itself when nothing gives pixel positions; the straightened picture is saved beside the results, and its pixels are the ones in the table.</p>

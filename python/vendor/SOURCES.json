@@ -1,0 +1,9 @@
+{
+  "trace-digitiser": {
+    "package": "trace_digitiser",
+    "version": "2.1.0",
+    "wheel": "trace_digitiser-2.1.0-py3-none-any.whl",
+    "sha256": "d302a666955036a08e5fe3daa816bca6e1035ddfef939edbfe2b3614de457776",
+    "from": "https://github.com/comparativechrono/trace-digitiser/tree/workbench-features (commit d02c5e6, not yet released)"
+  }
+}

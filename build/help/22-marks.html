@@ -1,0 +1,21 @@
+<!-- id: h-marks | title: Marking the picture | group: The Digitise tab | summary: Plot areas, regions to leave out, ticks and their values, colours, a colour bar, centre and rings, points by hand | keys: tools mark plot area exclude leave out tick ticks reference values colour colour picker eyedropper colour bar centre ring edit points snap -->
+<h1><!--ICON:crosshair-->Marking the picture</h1>
+<p class="lede">Each tool sets one of trace-digitiser's options. The marks are listed under <b>Your marks</b>, where the × beside each takes it out.</p>
+<div class="help-xscroll"><table>
+<tr><th>Tool</th><th>What it says</th><th>The option</th></tr>
+<tr><td><!--ICON:boxsel--> Plot area</td><td>Where a panel's axes are: drag from the y-axis line to the right-hand edge, and from the top to the x-axis line. One box per panel; the sides snap to the axis lines found. With plot areas marked, only those panels are read.</td><td><code>plot_area</code>, <code>--plot-area L,T,R,B</code></td></tr>
+<tr><td><!--ICON:ban--> Leave out</td><td>Something inside a plot that is not data: a legend, a label, an inset, an arrow.</td><td><code>exclude</code>, <code>--exclude L,T,R,B</code></td></tr>
+<tr><td><!--ICON:crosshair--> Tick</td><td>Click on a tick, below the x axis or beside a y axis, and type what it stands for. It snaps to the tick marks (and labels) found within a few pixels; the box offers the number read there, if any. Two ticks on an axis set its scale; more are fitted by least squares.</td><td><code>x_ref</code>, <code>y_ref</code>, <code>--x-ref COLUMN:VALUE</code></td></tr>
+<tr><td><!--ICON:pipette--> Colour</td><td>Click on a line, a point or a bar: only the colours picked are read. It takes the most coloured pixel near the click, not the paper or an edge.</td><td><code>trace_colours</code> / <code>colours</code></td></tr>
+<tr><td><!--ICON:heatmap--> Colour bar</td><td>(Heat maps) the coloured strip of the colour bar, if it isn't found.</td><td><code>colourbar</code></td></tr>
+<tr><td><!--ICON:target--> Centre, <!--ICON:polar--> Ring</td><td>(Polar plots) the centre, and rings with the values they stand for – two set the radial scale.</td><td><code>centre</code>, <code>r_ref</code></td></tr>
+<tr><td><!--ICON:pencil--> Edit points</td><td>(After a run of points or a polar plot) take points out, put points in; then save the edited table.</td><td>–</td></tr>
+</table></div>
+<h2>Ticks, in more detail</h2>
+<ul>
+<li>A tick goes with the plot area beside which you click. Panels stacked on one x axis share the ticks marked under the lowest; panels side by side share the y ticks marked beside the first.</li>
+<li>With several panels, the command line can't say which panel a tick belongs to: the result then gives the Python, which can (<code>x_ref={1: […], 2: […]}</code>).</li>
+<li>A log axis: choose <b>log</b> under <b>Axes</b>, and type the values themselves (10, 1000), not their logarithms.</li>
+<li>Ticks on the right-hand axis set the y scale from that axis – for a line drawn against it (<a href="#h-walk-1a">Figure 1a</a>).</li>
+<li>No ticks at all, and values known at the edges of the plot area? Give them under <b>Axes</b> (<code>y_min</code>, <code>y_max</code> …). Only if the axis ends exactly at those values.</li>
+</ul>

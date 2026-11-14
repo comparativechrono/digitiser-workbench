@@ -1,0 +1,14 @@
+<!-- id: h-kinds | title: Kinds of figure | group: Kinds of figure | index: yes | summary: Which reader for which figure | keys: kinds readers lines points bars rows heatmap polar choose which -->
+<h1><!--ICON:chart-->Kinds of figure</h1>
+<p class="lede">trace-digitiser has a reader for each kind of figure. Choose by what the values are drawn as, not by what the figure is about.</p>
+<div class="help-xscroll"><table>
+<tr><th>Kind</th><th>For</th><th>Python · command</th></tr>
+<tr><td><a href="#h-lines">Lines</a></td><td>lines and curves: time courses, spectra, survival curves, traces of recordings</td><td><code>td.digitise</code> · <code>trace-digitiser FIG</code></td></tr>
+<tr><td><a href="#h-points">Points</a></td><td>markers of any shape, with or without error bars: scatter plots, dot plots, forest plots, lines with markers</td><td><code>td.digitise_points</code> · <code>trace-digitiser points FIG</code></td></tr>
+<tr><td><a href="#h-bars">Bars</a></td><td>bar charts, up or across, up from or down from the baseline, with error bars</td><td><code>td.digitise_bars</code> · <code>trace-digitiser bars FIG</code></td></tr>
+<tr><td><a href="#h-rows">Rows</a></td><td>a stack of rows: actograms, double-plotted records, birthograms, raster plots</td><td><code>td.digitise_rows</code> · <code>trace-digitiser rows FIG</code></td></tr>
+<tr><td><a href="#h-heatmap">Heat map</a></td><td>cells coloured on a colour bar (or a known colour map)</td><td><code>td.digitise_heatmap</code> · <code>trace-digitiser heatmap FIG</code></td></tr>
+<tr><td><a href="#h-polar">Polar</a></td><td>points on polar axes: phases, circular data, rose plots' points</td><td><code>td.digitise_polar</code> · <code>trace-digitiser polar FIG</code></td></tr>
+</table></div>
+<p>A figure with lines <i>and</i> markers (a line through its points) can be read either way: as points, if what matters is the points; as lines, for the values between them. Box plots and pie charts have no reader yet: their few values are quickest read with the mouse – the status bar gives the value under it once two ticks are marked.</p>
+<!--GROUP-->
