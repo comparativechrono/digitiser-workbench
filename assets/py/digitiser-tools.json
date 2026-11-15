@@ -1,7 +1,7 @@
 {
   "archive": "digitiser-tools.zip",
-  "sha256": "63abbbfbb61d90d35aa875b0eccd1b876d0a0f7c8aed16b8309c43eecd5889d2",
-  "bytes": 195245,
+  "sha256": "0e986d4df85b779277cad24ba9e9c7e0c3ed65bbde0bf6264941ba57730dee38",
+  "bytes": 195720,
   "packages": {
     "trace-digitiser": "2.2.0",
     "dwb": "1.0.0"
@@ -9,7 +9,7 @@
   "trace_digitiser": {
     "version": "2.2.0",
     "wheel": "trace_digitiser-2.2.0-py3-none-any.whl",
-    "sha256": "e1fbd0158a3fb5b1e273ed682ee3a5f5423346b66e334b6dfb76536592ab0346",
-    "from": "https://github.com/comparativechrono/trace-digitiser/tree/real-figures (commit 2c7f730, not yet released)"
+    "sha256": "155fce137207c6603a4a98f46985a93f29d8b85e15dc322f8461197d80ecb607",
+    "from": "https://pypi.org/project/trace-digitiser/2.2.0/"
   }
 }
