@@ -1,9 +1,9 @@
 {
   "trace-digitiser": {
     "package": "trace_digitiser",
-    "version": "2.2.0",
-    "wheel": "trace_digitiser-2.2.0-py3-none-any.whl",
-    "sha256": "155fce137207c6603a4a98f46985a93f29d8b85e15dc322f8461197d80ecb607",
-    "from": "https://pypi.org/project/trace-digitiser/2.2.0/"
+    "version": "2.3.0",
+    "wheel": "trace_digitiser-2.3.0-py3-none-any.whl",
+    "sha256": "b6a74c49c04ce68576fc3b5d41a7a6ca91cc54be0ad27fad5b78687f2aa63ae8",
+    "from": "https://github.com/comparativechrono/trace-digitiser/tree/validation-fixes (commit 3538e2a, not yet released)"
   }
 }
