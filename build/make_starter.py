@@ -142,9 +142,9 @@ from dwb import known
 
 EX = "/data/examples/hearn-whitmore-2026"
 RECIPES = [
-    ("figure-1a", "lines", dict(trace_colours=["#4682b4"], exclude=[(120, 15, 262, 58), (455, 12, 882, 218)])),
+    ("figure-1a", "lines", dict(trace_colours=["#4682b4"], exclude=[(120, 15, 262, 58)])),
     ("figure-1a", "lines", dict(trace_colours=["#ff8c00"], exclude=[(990, 15, 1296, 58)], y_ref=[(485.5, 6), (34.5, 13)])),
-    ("figure-1a", "lines", dict(trace_colours=["#228b22"], plot_area=(543, 20, 876, 159), exclude=[(606, 26, 868, 68)],
+    ("figure-1a", "lines", dict(trace_colours=["#228b22"], plot_area=(543, 20, 876, 159),
                                 x_ref=[(558, 1972), (865, 1979)], y_ref=[(62, 60000), (118, 50000)])),
     ("figure-1b", "bars", dict()),
     ("figure-2", "rows", dict(row_values=list(range(1955, 2014)), bins=24, dots="black", row_spacing_value=1.1)),
@@ -199,8 +199,8 @@ import matplotlib.pyplot as plt
 import trace_digitiser as td
 
 EX = "/data/examples/hearn-whitmore-2026"
-line = td.digitise(f"{EX}/figure-1a.png", trace_colours=["#4682b4"],
-                   exclude=[(120, 15, 262, 58), (455, 12, 882, 218)], write_outputs=False)
+line = td.digitise(f"{EX}/figure-1a.png", trace_colours=["#4682b4"], exclude=[(120, 15, 262, 58)],
+                   write_outputs=False)
 d = line.trace_data
 months = pd.read_csv(f"{EX}/figure-1a.known.csv", parse_dates=["date"])   # (only its dates are used here)
 months["births_read"] = np.interp(months.decimal_year, d.x_value, d.mean_estimate)
