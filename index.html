@@ -249,14 +249,14 @@ result.trace_data.groupby("panel_id").x_value.agg(["min", "max"])</code></pre>
 <div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png">Open Figure 1a</button></div>
 <p>Once it has looked, the side panel lists one plot area: its y axis (45000 … 80000) and x axis (1955 … 2015) read with high confidence, and its colours – orange, blue and black. The right-hand axis's 8 labels were found but not read as numbers: they are words.</p>
 
-<h2>1 · The blue line: one colour, and two things to leave out</h2>
+<h2>1 · The blue line: one colour, and a legend to leave out</h2>
 <ol class="steps">
 <li>With the <b>Colour</b> tool, click on the blue line (or click the blue chip under <i>Colours</i>). Only that colour is read now.</li>
-<li>With <b>Leave out</b>, drag a box around the <i>Births</i> legend at the top left – its blue sample would be read as part of the line – and another around the whole inset, with its labels.</li>
+<li>With <b>Leave out</b>, drag a box around the <i>Births</i> legend at the top left – its blue sample would be read as part of the line. The inset needs no box: its line is green, and the blue line never runs behind it. (A box round the whole inset, with its labels, would cut off the peaks of 1971 and 1972, which rise beside the inset's labels.)</li>
 <li>Digitise as lines.</li>
 </ol>
-<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"ticks":[],"colours":["#4682b4"],"exclude":[[120,15,262,58],[455,12,882,218]]}}' data-dg-run>Mark these for me, and digitise</button></div>
-<p>Typical error: <span class="known">about 500 births (1.4% of the axis)</span>. That is more than for the other figures, and not a fault of the reading: 720 months are drawn across about 1190 columns of pixels, so the line zigzags within a column, and its middle is not any one month's value. Under the inset (left out), the line is hidden and interpolated: the worst errors are there.</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"ticks":[],"colours":["#4682b4"],"exclude":[[120,15,262,58]]}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p>Typical error: <span class="known">about 500 births (1.4% of the axis)</span>. That is more than for the other figures, and not a fault of the reading: 720 months are drawn across about 1190 columns of pixels, so the line zigzags within a column, and its middle is not any one month's value. The worst errors are at the sharpest peaks, a few thousand births.</p>
 
 <h2>2 · The orange line: a second y axis, labelled with words</h2>
 <p>Its labels are months, so they can't give a scale; you give it with two ticks. Months are numbers here: June is 6 and January (of the next year) 13.</p>
@@ -266,22 +266,22 @@ result.trace_data.groupby("panel_id").x_value.agg(["min", "max"])</code></pre>
 <li>Digitise as lines. Ticks on the right-hand axis set the y scale for this run.</li>
 </ol>
 <div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[],"colours":["#ff8c00"],"exclude":[[990,15,1296,58]],"ticks":[{"axis":"y","px":485.5,"value":6,"side":"right","at":[1310,485]},{"axis":"y","px":34.5,"value":13,"side":"right","at":[1310,35]}]}}' data-dg-run>Mark these for me, and digitise</button></div>
-<p>Typical error: <span class="known">0.05 months (0.7%)</span>. A right-hand axis with <i>numbers</i> on it needs no ticks: choose <b>Axes → Read the values against a second y axis on the right</b> (<code>--y-axis right</code>, <code>y_axis="right"</code>).</p>
+<p>Typical error: <span class="known">0.05 months (0.7%)</span>. Where the line rises to January (2001–2002, 2009–2010 and 2011–2012) it runs behind the legend, whose box hides it: those months are filled in from either side (<code>interpolated</code>), and read low. No mark brings them back – the figure itself has covered them. A right-hand axis with <i>numbers</i> on it needs no ticks: choose <b>Axes → Read the values against a second y axis on the right</b> (<code>--y-axis right</code>, <code>y_axis="right"</code>).</p>
 
 <h2>3 · The green line: an inset is a plot of its own</h2>
 <ol class="steps">
 <li>Take out the marks again, and pick the green line's colour.</li>
-<li>With <b>Plot area</b>, drag a box over the inset's own axes – from its y-axis line to its right edge, and from its top to its x-axis line. Leave out the inset's legend.</li>
+<li>With <b>Plot area</b>, drag a box over the inset's own axes – from its y-axis line to its right edge, and from its top to its x-axis line. Its legend is found and left out by itself (the <i>Check</i> list says so): a box drawn round it by hand would cut off the peak of early 1973, which reaches up beside it.</li>
 <li>Press <b>Look again</b>: with your plot area, trace-digitiser finds the inset's tick marks (its labels are too small, or slanted, to read).</li>
 <li>With <b>Tick</b>, click under the inset's x axis on the first tick (<kbd>1972</kbd>) and the last (<kbd>1979</kbd>), and beside its y axis on <kbd>60000</kbd> and <kbd>50000</kbd>.</li>
 <li>Digitise as lines.</li>
 </ol>
-<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[[543,20,876,159]],"colours":["#228b22"],"exclude":[[606,26,868,68]],"ticks":[{"axis":"x","px":558,"value":1972,"side":"bottom","at":[558,165]},{"axis":"x","px":865,"value":1979,"side":"bottom","at":[865,165]},{"axis":"y","px":62,"value":60000,"side":"left","at":[540,62]},{"axis":"y","px":118,"value":50000,"side":"left","at":[540,118]}]}}' data-dg-run>Mark these for me, and digitise</button></div>
-<p>Typical error: <span class="known">about 220 births (0.9%)</span>. The three runs are three commands – the result shows each:</p>
+<div class="tryrow"><button class="do" type="button" data-digitise="/data/examples/hearn-whitmore-2026/figure-1a.png" data-dg-set='{"kind":"lines","marks":{"areas":[[543,20,876,159]],"colours":["#228b22"],"exclude":[],"ticks":[{"axis":"x","px":558,"value":1972,"side":"bottom","at":[558,165]},{"axis":"x","px":865,"value":1979,"side":"bottom","at":[865,165]},{"axis":"y","px":62,"value":60000,"side":"left","at":[540,62]},{"axis":"y","px":118,"value":50000,"side":"left","at":[540,118]}]}}' data-dg-run>Mark these for me, and digitise</button></div>
+<p>Typical error: <span class="known">about 210 births (0.9%)</span>. The three runs are three commands – the result shows each:</p>
 <pre class="code" data-run="term"><code>EX=/data/examples/hearn-whitmore-2026
-trace-digitiser $EX/figure-1a.png --trace-colour '#4682b4' --exclude 120,15,262,58 --exclude 455,12,882,218 -o ~/results/1a-blue
+trace-digitiser $EX/figure-1a.png --trace-colour '#4682b4' --exclude 120,15,262,58 -o ~/results/1a-blue
 trace-digitiser $EX/figure-1a.png --trace-colour '#ff8c00' --exclude 990,15,1296,58 --y-ref 485.5:6 --y-ref 34.5:13 -o ~/results/1a-orange
-trace-digitiser $EX/figure-1a.png --trace-colour '#228b22' --plot-area 543,20,876,159 --exclude 606,26,868,68 --x-ref 558:1972 --x-ref 865:1979 --y-ref 62:60000 --y-ref 118:50000 -o ~/results/1a-green
+trace-digitiser $EX/figure-1a.png --trace-colour '#228b22' --plot-area 543,20,876,159 --x-ref 558:1972 --x-ref 865:1979 --y-ref 62:60000 --y-ref 118:50000 -o ~/results/1a-green
 compare-known --example figure-1a ~/results/1a-orange/figure-1a_automated_digitised_trace_by_column.csv</code></pre>
 <p>A colour in a command is put in quotes: an unquoted <code>#</code> starts a comment in the shell.</p>
 </article>
@@ -655,7 +655,7 @@ ls ~/results/all</code></pre>
 <h1><svg class="ic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>Versions, and how to cite</h1>
 <table>
 <tr><th>What</th><th>Version</th><th>Where it comes from</th></tr>
-<tr><td>trace-digitiser</td><td>2.3.0</td><td><a href="https://github.com/comparativechrono/trace-digitiser/tree/validation-fixes" target="_blank" rel="noopener">github.com/comparativechrono/trace-digitiser/tree/validation-fixes</a> (commit 3538e2a, not yet released)</td></tr>
+<tr><td>trace-digitiser</td><td>2.3.0</td><td><a href="https://pypi.org/project/trace-digitiser/2.3.0/" target="_blank" rel="noopener">pypi.org/project/trace-digitiser/2.3.0/</a></td></tr>
 <tr><td>dwb (the workbench's own glue)</td><td>1.0.0</td><td>python/dwb in this site's repository</td></tr>
 <tr><td>Python (Pyodide), with NumPy, OpenCV, pandas, Pillow and Matplotlib</td><td>Pyodide 0.29.5</td><td>cdn.jsdelivr.net (Pyodide's own builds); the versions of the packages are in the Terminal: <code>pip list</code></td></tr>
 <tr><td>Tesseract (OCR), compiled to WebAssembly</td><td>5.1.0 (tesseract.js-core 6.1.2), with the English model of tessdata_fast 4.1.0</td><td>assets/vendor/tesseract in this site</td></tr>
@@ -717,7 +717,7 @@ ls ~/results/all</code></pre>
 
 <script>window.WB_EXAMPLES = [{"p":"hearn-whitmore-2026/README.md","s":8756},{"p":"hearn-whitmore-2026/figure-1a.known.csv","s":25810},{"p":"hearn-whitmore-2026/figure-1a.png","s":182972},{"p":"hearn-whitmore-2026/figure-1b-scanned-straightened.png","s":288047},{"p":"hearn-whitmore-2026/figure-1b-scanned.jpg","s":39045},{"p":"hearn-whitmore-2026/figure-1b.known.csv","s":212},{"p":"hearn-whitmore-2026/figure-1b.png","s":27508},{"p":"hearn-whitmore-2026/figure-2.known.csv","s":50221},{"p":"hearn-whitmore-2026/figure-2.png","s":192521},{"p":"hearn-whitmore-2026/figure-3a.known.csv","s":8388},{"p":"hearn-whitmore-2026/figure-3a.png","s":53451},{"p":"hearn-whitmore-2026/figure-3b.known.csv","s":1893},{"p":"hearn-whitmore-2026/figure-3b.png","s":132291},{"p":"hearn-whitmore-2026/figure-3c-scanned-straightened.png","s":422709},{"p":"hearn-whitmore-2026/figure-3c-scanned.jpg","s":57982},{"p":"hearn-whitmore-2026/figure-3c.known.csv","s":1954},{"p":"hearn-whitmore-2026/figure-3c.png","s":61566},{"p":"hearn-whitmore-2026/figure-4.known.csv","s":648860},{"p":"hearn-whitmore-2026/figure-4.png","s":592488},{"p":"hearn-whitmore-2026/figure-s3.known.csv","s":3613},{"p":"hearn-whitmore-2026/figure-s3.png","s":48076},{"p":"hearn-whitmore-2026/practice-pages.pdf","s":453933},{"p":"hearn-whitmore-2026/data/births.csv","s":14943},{"p":"hearn-whitmore-2026/data/environmental.csv","s":39477}];
 window.WB_STARTERS = [{"p":"notebooks/01-digitise-in-python.ipynb"},{"p":"notebooks/02-how-close-is-it.ipynb"},{"p":"notebooks/03-using-the-values.ipynb"}];
-window.WB_BUNDLE = {"archive":"digitiser-tools.zip","sha256":"33798112924fdca914a753a710e44e62d746610ead917f84a74c3799ad657bb0","bytes":213086,"packages":{"trace-digitiser":"2.3.0","dwb":"1.0.0"},"trace_digitiser":{"version":"2.3.0","wheel":"trace_digitiser-2.3.0-py3-none-any.whl","sha256":"b6a74c49c04ce68576fc3b5d41a7a6ca91cc54be0ad27fad5b78687f2aa63ae8","from":"https://github.com/comparativechrono/trace-digitiser/tree/validation-fixes (commit 3538e2a, not yet released)"}};</script>
+window.WB_BUNDLE = {"archive":"digitiser-tools.zip","sha256":"33798112924fdca914a753a710e44e62d746610ead917f84a74c3799ad657bb0","bytes":213086,"packages":{"trace-digitiser":"2.3.0","dwb":"1.0.0"},"trace_digitiser":{"version":"2.3.0","wheel":"trace_digitiser-2.3.0-py3-none-any.whl","sha256":"558de4dc1dee70d0b1bfd347c49cba055e5ad12e357c64ba74e4a67c48617b6a","from":"https://pypi.org/project/trace-digitiser/2.3.0/"}};</script>
 <script src="assets/js/config.js"></script>
 <script src="assets/js/core.js"></script>
 <script src="assets/js/icons.js"></script>

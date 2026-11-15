@@ -16,9 +16,9 @@ window.go = async (pic, set, name) => {
   log(name, `${((performance.now() - t) / 1000).toFixed(1)}s`, D.result.table.n, 'rows;', D.compared.lines.join(' | '));
   log('   $', D.result.command.text, D.result.command.ok ? '' : '(' + D.result.command.why + ')');
 };
-await window.go('figure-1a.png', { kind: 'lines', marks: { colours: ['#4682b4'], exclude: [[120, 15, 262, 58], [455, 12, 882, 218]], areas: [], ticks: [] } }, '1a blue');
+await window.go('figure-1a.png', { kind: 'lines', marks: { colours: ['#4682b4'], exclude: [[120, 15, 262, 58]], areas: [], ticks: [] } }, '1a blue');
 await window.go('figure-1a.png', { kind: 'lines', marks: { colours: ['#ff8c00'], exclude: [[990, 15, 1296, 58]], areas: [], ticks: [{ axis: 'y', px: 485.5, value: 6, side: 'right', at: [1310, 485] }, { axis: 'y', px: 34.5, value: 13, side: 'right', at: [1310, 35] }] } }, '1a orange');
-await window.go('figure-1a.png', { kind: 'lines', marks: { colours: ['#228b22'], areas: [[543, 20, 876, 159]], exclude: [[606, 26, 868, 68]], ticks: [{ axis: 'x', px: 558, value: 1972, side: 'bottom', at: [558, 165] }, { axis: 'x', px: 865, value: 1979, side: 'bottom', at: [865, 165] }, { axis: 'y', px: 62, value: 60000, side: 'left', at: [540, 62] }, { axis: 'y', px: 118, value: 50000, side: 'left', at: [540, 118] }] } }, '1a green');
+await window.go('figure-1a.png', { kind: 'lines', marks: { colours: ['#228b22'], areas: [[543, 20, 876, 159]], exclude: [], ticks: [{ axis: 'x', px: 558, value: 1972, side: 'bottom', at: [558, 165] }, { axis: 'x', px: 865, value: 1979, side: 'bottom', at: [865, 165] }, { axis: 'y', px: 62, value: 60000, side: 'left', at: [540, 62] }, { axis: 'y', px: 118, value: 50000, side: 'left', at: [540, 118] }] } }, '1a green');
 //--SHOT 1a-green
 await window.go('figure-1b.png', { kind: 'bars', marks: { areas: [], exclude: [], ticks: [], colours: [] } }, '1b');
 await window.go('figure-2.png', { kind: 'rows', marks: { areas: [], exclude: [], ticks: [], colours: [] }, options: { row_values: '1955:2013', bins: '24', dots: 'black', row_spacing_value: '1.1' } }, '2');
