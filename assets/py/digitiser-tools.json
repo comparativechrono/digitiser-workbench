@@ -1,10 +1,10 @@
 {
   "archive": "digitiser-tools.zip",
-  "sha256": "33798112924fdca914a753a710e44e62d746610ead917f84a74c3799ad657bb0",
-  "bytes": 213086,
+  "sha256": "c9b8f3727bec5ad7dfcea4260947e25527feb41fa430a12ab95d12afb00d5d35",
+  "bytes": 215212,
   "packages": {
     "trace-digitiser": "2.3.0",
-    "dwb": "1.0.0"
+    "dwb": "1.1.0"
   },
   "trace_digitiser": {
     "version": "2.3.0",

@@ -70,6 +70,37 @@ def test_recipes_and_their_command_lines(dwb, name, tmp_path):
     pd.testing.assert_frame_equal(a, b)
 
 
+@pytest.mark.skipif(not have_tesseract(), reason="needs Tesseract")
+def test_peaks_at_their_tips(dwb, tmp_path):
+    """Figure 3a's spikes (at 2.4 and 3 months) are a pixel or two wide: read at the middle of each column they come
+    out about half their height, at their tips about their height. The command line cannot say this; the Python,
+    which carries the function, does the same."""
+    gui, known, _ = dwb
+    path = os.path.join(EX, "figure-3a.png")
+    k = known.known_values("figure-3a")
+    for peaks in ("middle", "tips"):
+        r = gui.digitise("lines", path, {"peaks": peaks}, output_dir=str(tmp_path / peaks))
+        csv = [f for f in r["files"] if f.endswith("_trace_by_column.csv")][0]
+        d = pd.read_csv(csv)
+        for pid, era in ((1, "1955-1974"), (2, "1976-2014")):
+            g = d[(d.panel_id == pid) & d.x_value.between(2.3, 2.45)]
+            want = k[(k.panel == era) & k.period_months.between(2.3, 2.45)].amplitude.max()
+            got = g.center_estimate.max()
+            if peaks == "tips":
+                assert abs(got - want) < 0.1 * want, (era, got, want)
+            else:
+                assert got < 0.6 * want, (era, got, want)
+        stats = gui.compare("figure-3a", csv, "lines")["stats"]
+        assert all(s["median_abs"] < 0.001 for s in stats.values())
+    assert not r["command"]["ok"] and "tips" in r["command"]["why"]
+    ns = {}
+    exec(compile(r["python"].replace(repr(str(tmp_path / "tips")), repr(str(tmp_path / "again"))), "<code>", "exec"),
+         ns)
+    again = ns["result"].trace_data
+    pd.testing.assert_series_equal(again.center_estimate.reset_index(drop=True), d.center_estimate,
+                                   check_names=False, rtol=1e-9)
+
+
 def test_known_values_compare_perfectly_with_themselves(dwb):
     _, known, _ = dwb
     k = known.known_values("figure-3c")

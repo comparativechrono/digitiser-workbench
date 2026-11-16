@@ -93,7 +93,7 @@
   };
   const EMPTY_MARKS = () => ({ areas: [], exclude: [], ticks: [], colours: [], colourbar: null, centre: null, rings: [] });
   const DEFAULT_OPTS = {
-    lines: { achromatic: 'auto' },
+    lines: { achromatic: 'auto', peaks: 'middle' },
     points: { error_bars: 'auto', colour_tolerance: 60, marker_size: '' },
     bars: { orientation: 'vertical', error_bars: true, colour_tolerance: 40, baseline: '' },
     rows: { row_values: '', bins: '', row_spacing_value: '', direction: 'auto', dots: '', colour_tolerance: 60 },
@@ -1576,7 +1576,7 @@
       const F = h('div.dg-fields');
       const colourNote = () => (this.marks.colours.length ? `Reading ${this.marks.colours.length} colour${this.marks.colours.length > 1 ? 's' : ''} you picked.` : 'Every colour drawn is tried; pick colours (Colour tool) to read only those.');
       if (this.kind === 'lines') {
-        F.append(h('p.sm', colourNote()), this._field('Black or grey lines', this._select(o, 'achromatic', [['auto', 'when they look like lines (auto)'], ['always', 'always look for them'], ['never', 'never (black is the axes and text)']])));
+        F.append(h('p.sm', colourNote()), this._field('Black or grey lines', this._select(o, 'achromatic', [['auto', 'when they look like lines (auto)'], ['always', 'always look for them'], ['never', 'never (black is the axes and text)']])), this._field('Peaks', this._select(o, 'peaks', [['middle', 'the middle of the line in each column'], ['tips', 'narrow peaks at their tips']]), 'For spikes a pixel or two wide (a spectrum): read at their tips, not half way up'));
       } else if (this.kind === 'points') {
         F.append(h('p.sm', colourNote()), this._field('Error bars', this._select(o, 'error_bars', [['auto', 'find them (auto)'], ['vertical', 'up and down'], ['horizontal', 'across'], ['both', 'both'], ['none', 'none']])), this._field('Marker size', this._input(o, 'marker_size', { inputmode: 'decimal', placeholder: 'found by itself' }), 'Their diameter, in pixels, if they are not found well'), this._field('Colour tolerance', this._input(o, 'colour_tolerance', { inputmode: 'decimal' }), 'How far a pixel’s colour may be from the colour picked (0–441)'));
       } else if (this.kind === 'bars') {
@@ -1647,6 +1647,7 @@
       if (k === 'lines') {
         if (cols.length) out.trace_colours = cols;
         if (o.achromatic !== 'auto') out.achromatic = o.achromatic;
+        if (o.peaks === 'tips') out.peaks = 'tips';
       } else if (k === 'points') {
         if (cols.length) out.colours = cols;
         if (o.error_bars !== 'auto') out.error_bars = o.error_bars;

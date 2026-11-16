@@ -533,6 +533,8 @@ def digitise(kind: str, path: str, options: Optional[Dict[str, Any]] = None, out
     path = os.path.expanduser(path)
     options = dict(options or {})
     notes: List[str] = []
+    # the workbench's own option for lines: narrow peaks read at their tips (dwb.lines), after reading
+    tips = options.pop("peaks", None) == "tips" and kind == "lines"
     ticks = options.pop("ticks", None)
     if ticks and kind != "polar":
         refs = refs_from_ticks(path, ticks, options)
@@ -551,6 +553,15 @@ def digitise(kind: str, path: str, options: Optional[Dict[str, Any]] = None, out
         if kind == "lines":
             result = reader(path, output_dir=out_dir, output_prefix=prefix, write_outputs=bool(out_dir),
                             save_overlay=overlay and bool(out_dir), **opts)
+            if tips:
+                from .lines import peaks_at_tips
+
+                result.trace_data = peaks_at_tips(result)
+                if result.trace_csv_path:
+                    result.trace_data.to_csv(result.trace_csv_path, index=False)
+                n_tips = int(result.trace_data["tip"].sum())
+                notes.append(f"Peaks at their tips: {n_tips} column{'s' if n_tips != 1 else ''} taken at the tip of "
+                             "a narrow peak or trough (the column tip says which).")
             data = result.trace_data
         else:
             result = reader(path, output_dir=out_dir, output_prefix=prefix, write_outputs=bool(out_dir),
@@ -572,9 +583,10 @@ def digitise(kind: str, path: str, options: Optional[Dict[str, Any]] = None, out
         "shapes": _shapes(kind, result, data),
         "table": _table(data),
         "files": files,
-        "options": {k: (list(v) if isinstance(v, tuple) else v) for k, v in opts.items()},
-        "command": command_line(kind, path, opts, out_dir, overlay),
-        "python": python_code(kind, path, opts, out_dir),
+        "options": {**{k: (list(v) if isinstance(v, tuple) else v) for k, v in opts.items()},
+                    **({"peaks": "tips"} if tips else {})},
+        "command": command_line(kind, path, opts, out_dir, overlay, tips=tips),
+        "python": python_code(kind, path, opts, out_dir, tips=tips),
     }
 
 
@@ -668,12 +680,13 @@ def _home(path: str) -> str:
 
 
 def command_line(kind: str, path: str, opts: Dict[str, Any], output_dir: Optional[str] = None,
-                 overlay: bool = False) -> Dict[str, Any]:
+                 overlay: bool = False, tips: bool = False) -> Dict[str, Any]:
     """The trace-digitiser command that does what *opts* say: ``{"text", "ok", "why"}`` (ok is False, with why, for
-    what the command line cannot say - reference points for one panel of several)."""
+    what the command line cannot say - reference points for one panel of several, or peaks read at their tips)."""
     q = lambda s: s if s.startswith("~/") and shlex.quote(s[2:]) == s[2:] else shlex.quote(s)  # noqa: E731
     words = ["trace-digitiser"] + ([kind] if kind != "lines" else []) + [q(_home(path))]
-    why = ""
+    why = ("peaks read at their tips are the workbench's, done in Python after reading: the command line gives the "
+           "middle of the line in every column") if tips else ""
     box = lambda b: ",".join(_g(v) for v in b)  # noqa: E731
     for k, v in opts.items():
         if _is_default(kind, k, v):
@@ -759,8 +772,11 @@ def _py(v) -> str:
     return repr(v)
 
 
-def python_code(kind: str, path: str, opts: Dict[str, Any], output_dir: Optional[str] = None) -> str:
-    """The Python that does what *opts* say (for a notebook, or a script on your own computer)."""
+def python_code(kind: str, path: str, opts: Dict[str, Any], output_dir: Optional[str] = None,
+                tips: bool = False) -> str:
+    """The Python that does what *opts* say (for a notebook, or a script on your own computer). With *tips*, it
+    carries the workbench's function that reads narrow peaks at their tips (dwb.lines), whole, so that it runs
+    where only trace-digitiser is installed."""
     fn = READERS[kind]
     lines = ["import trace_digitiser as td", "", f"result = td.{fn}(", f"    {_py(path)},"]
     for k, v in opts.items():
@@ -771,6 +787,15 @@ def python_code(kind: str, path: str, opts: Dict[str, Any], output_dir: Optional
         lines.append(f"    output_dir={_py(output_dir)},")
     lines.append(")")
     table = "result.trace_data" if kind == "lines" else "result.data"
+    if tips:
+        import inspect
+
+        from . import lines as tips_module
+
+        lines += ["", "", inspect.getsource(tips_module.peaks_at_tips).rstrip(), "", "",
+                  "result.trace_data = peaks_at_tips(result)  # narrow peaks read at their tips"]
+        if output_dir:
+            lines.append("result.trace_data.to_csv(result.trace_csv_path, index=False)")
     lines += ["for message in result.warnings:", "    print('CHECK:', message)", table]
     return "\n".join(lines)
 

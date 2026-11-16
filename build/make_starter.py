@@ -139,6 +139,7 @@ a minute or so: Figure 2 has 59 rows of labels to read."""),
 import pandas as pd
 import trace_digitiser as td
 from dwb import known
+from dwb.lines import peaks_at_tips
 
 EX = "/data/examples/hearn-whitmore-2026"
 RECIPES = [
@@ -148,7 +149,7 @@ RECIPES = [
                                 x_ref=[(558, 1972), (865, 1979)], y_ref=[(62, 60000), (118, 50000)])),
     ("figure-1b", "bars", dict()),
     ("figure-2", "rows", dict(row_values=list(range(1955, 2014)), bins=24, dots="black", row_spacing_value=1.1)),
-    ("figure-3a", "lines", dict()),
+    ("figure-3a", "lines", dict(peaks="tips")),  # the workbench's own option, after reading (dwb.lines)
     ("figure-3b", "polar", dict(colours=["#1f77b4"], r_ref=[(5, 1955), (250, 2005)])),
     ("figure-3c", "points", dict()),
     ("figure-4", "heatmap", dict(rows=21)),
@@ -158,10 +159,14 @@ READER = {"lines": td.digitise, "points": td.digitise_points, "bars": td.digitis
           "heatmap": td.digitise_heatmap, "polar": td.digitise_polar}"""),
     ("code", """rows = []
 for figure, kind, options in RECIPES:
+    options = dict(options)
+    tips = options.pop("peaks", None) == "tips"
     t = time.time()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         result = READER[kind](f"{EX}/{figure}.png", write_outputs=False, **options)
+        if tips:
+            result.trace_data = peaks_at_tips(result)
     data = result.trace_data if kind == "lines" else result.data
     c = known.compare(figure, data, kind)
     for label, s in c["stats"].items():
@@ -178,6 +183,8 @@ the figures:
 - **Figure 1a, births**: the line is dense - each column of pixels holds more than a month - so the middle of what is
   drawn in a column is not any one month's value.
 - **Figure 2**: each row's fill is a few pixels high, so a pixel is a large part of it.
+- **Figure 3a** is read with its narrow peaks at their tips (the workbench's *Peaks* option): the spikes at 2.4, 3
+  and 4 months are a pixel or two wide, and the middle of a column that holds one is only half way up it.
 - **Figure 3b, angles**: only the points found are compared; where markers overlap, some years are missed and other
   points are found. The walkthrough shows how to put that right by hand (*Edit points*).
 - **Figure 4**: each column of pixels is nearly two of the heat map's columns, which are averaged here."""),
