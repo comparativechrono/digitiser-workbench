@@ -24,6 +24,8 @@ await window.go('figure-1b.png', { kind: 'bars', marks: { areas: [], exclude: []
 await window.go('figure-2.png', { kind: 'rows', marks: { areas: [], exclude: [], ticks: [], colours: [] }, options: { row_values: '1955:2013', bins: '24', dots: 'black', row_spacing_value: '1.1' } }, '2');
 //--SHOT 2
 await window.go('figure-3a.png', { kind: 'lines', marks: { areas: [], exclude: [], ticks: [], colours: [] } }, '3a');
+await window.go('figure-3a.png', { kind: 'lines', marks: { areas: [], exclude: [], ticks: [], colours: [] }, options: { peaks: 'tips' } }, '3a tips');
+//--SHOT 3a-tips
 await window.go('figure-3b.png', { kind: 'polar', marks: { colours: ['#1f77b4'], rings: [{ r: 5, value: 1955 }, { r: 250, value: 2005 }], centre: null } }, '3b');
 //--SHOT 3b
 await window.go('figure-4.png', { kind: 'heatmap', marks: { areas: [], exclude: [], ticks: [], colours: [], colourbar: null }, options: { rows: '21' } }, '4');

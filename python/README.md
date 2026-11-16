@@ -7,8 +7,9 @@ What the workbench's Python (Pyodide, which runs in your web browser) unpacks wh
   heat maps and polar plots. Install it on your own computer with `pip install trace-digitiser`; its source is at
   <https://github.com/comparativechrono/trace-digitiser>.
 - **dwb**, the workbench's own glue: `dwb.cli` runs the terminal's programs (`trace-digitiser`, `compare-known`),
-  `dwb.gui` has what the Digitise tab calls, and `dwb.known` compares what was digitised from one of the examples
-  (the figures of Hearn and Whitmore 2026) with the values those figures show.
+  `dwb.gui` has what the Digitise tab calls, `dwb.lines` reads a line's narrow peaks at their tips (the tab's
+  *Peaks* option), and `dwb.known` compares what was digitised from one of the examples (the figures of Hearn and
+  Whitmore 2026) with the values those figures show.
 - **pytesseract**, a stand-in for the package of that name: it reads text with Tesseract compiled to WebAssembly,
   in the page, rather than by running the `tesseract` program, which a web page cannot do. On your own computer use
   the real pytesseract and Tesseract.

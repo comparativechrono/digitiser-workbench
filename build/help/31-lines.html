@@ -1,9 +1,10 @@
-<!-- id: h-lines | title: Lines | group: Kinds of figure | summary: A value for each column of pixels of each line | keys: lines line trace curve time series envelope interpolated resample achromatic black -->
+<!-- id: h-lines | title: Lines | group: Kinds of figure | summary: A value for each column of pixels of each line | keys: lines line trace curve time series envelope interpolated resample achromatic black peaks tips spikes -->
 <h1><!--ICON:chart-->Lines</h1>
 <p class="lede">For each line in each plot area, a value for every column of pixels: where the middle of the line is in that column. Lines are told apart by their colour.</p>
 <ul>
 <li><b>Colours</b>: without colours picked, every colour drawn in the plot that looks like a line is read, each as a line of its own; black or grey ones only when they look like lines rather than axes and text (<b>Black or grey lines</b> changes that).</li>
 <li><b>The values</b>: <code>center_estimate</code> (the middle), <code>mean_estimate</code> (the mean of the line's pixels), <code>upper_envelope</code> and <code>lower_envelope</code> (its top and bottom). For a line drawn thick, or a dense line that zigzags within a column, the envelope says how much is drawn there.</li>
+<li><b>Peaks</b>: a peak a pixel or two wide – a spike in a spectrum – fills the column that holds it from the floor up to its tip, so the middle of that column is about half way up. <b>Peaks: narrow peaks at their tips</b> takes such a column at the top of what is drawn there, less half the line's thickness (and a narrow trough at its bottom), and says which columns in <code>tip</code>. It is the workbench's own step, done after reading: the command line gives the middle of every column, and the Python the result gives carries the function that does it.</li>
 <li><b>Gaps</b>: a column with nothing of the line (under a legend, or past its end) is filled in from its neighbours, and <code>interpolated</code> is True there. The Check list says when much of a line is.</li>
 <li><b>Resampling</b>: in Python, <code>result.resample(interval)</code> gives one value per interval of the x axis (a month, an hour) rather than per pixel.</li>
 </ul>
